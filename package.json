@@ -9,7 +9,8 @@
   "scripts": {
     "uniq": "uniq versions versionstmp && mv versionstmp versions",
     "publish": "sh publish.sh",
-    "test": "npm run publish && npm run uniq && ./node_modules/.bin/lab tests/*-test.js",
+    "test-b": "npm run publish && npm run uniq && ./node_modules/.bin/lab tests/*-test.js",
+    "test": "./node_modules/.bin/lab tests/*-test.js",
     "codestyle-fix": "./node_modules/.bin/standard --format",
     "codestyle": "./node_modules/.bin/standard"
   },
