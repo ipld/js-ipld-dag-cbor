@@ -1,6 +1,6 @@
 {
   "mlink": {
-    "@id": "http://schema.org/name",
+    "@id": "http://merkle-link",
     "@type": "@id"
   }
 }

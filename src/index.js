@@ -8,7 +8,9 @@ var versions = fs.readFileSync(path.resolve(__dirname, '../versions'), 'utf8').s
 console.log(versions[versions.length - 2])
 
 exports.context = {
-  merkleweb: 'http://gateway.ipfs.io/ipfs/' + versions[versions.length - 2] + '/merkleweb'
+  merkleweb: 'http://gateway.ipfs.io/ipfs/' + versions[versions.length - 2] + '/merkleweb',
+  exampleJSONLD: 'http://gateway.ipfs.io/ipfs/' + versions[versions.length - 2] + '/example-jsonld'
+
 }
 
 exports.types = {
