@@ -8,7 +8,8 @@
   },
   "scripts": {
     "test": "./node_modules/.bin/lab tests/*-test.js",
-    "codestyle": "./node_modules/.bin/standard --format"
+    "codestyle-fix": "./node_modules/.bin/standard --format",
+    "codestyle": "./node_modules/.bin/standard"
   },
   "pre-commit": [
     "codestyle"
