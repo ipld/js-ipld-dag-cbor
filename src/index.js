@@ -10,7 +10,6 @@ console.log(versions[versions.length - 2])
 exports.context = {
   merkleweb: 'http://gateway.ipfs.io/ipfs/' + versions[versions.length - 2] + '/merkleweb',
   exampleJSONLD: 'http://gateway.ipfs.io/ipfs/' + versions[versions.length - 2] + '/example-jsonld'
-
 }
 
 exports.types = {

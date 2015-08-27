@@ -1,8 +1,6 @@
 {
   "@context": {
-    "mlink": {
-      "@id": "http://merkle-link",
-      "@type": "@id"
-    }
+    "mlink": "http://ipfs.io/merkle-link",
+    "@vocab": "http://example.com/vocab"
   }
 }
