@@ -52,7 +52,7 @@ experiment('JSONLD+CBOR+multihash test', function () {
       '@context': 'http://gateway.ipfs.io/ipfs/QmeuyZfvkugKe65pb6hHGJ9M61RAnFUoZ8PY5yhWmCo6Lq/merkleweb',
       data: new Buffer('aaaah the data!'),
       other: 'aaa',
-      mlink: 'sdadas'
+      mlink: { '@id': 'aaa'}
     }
 
     /*

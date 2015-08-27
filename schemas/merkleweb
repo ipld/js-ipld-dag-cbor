@@ -1,6 +1,8 @@
 {
-  "mlink": {
-    "@id": "http://merkle-link",
-    "@type": "@id"
+  "@context": {
+    "mlink": {
+      "@id": "http://merkle-link",
+      "@type": "@id"
+    }
   }
 }
