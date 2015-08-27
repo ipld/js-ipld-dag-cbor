@@ -1,11 +1,11 @@
 exports = module.exports
 
 exports.context = {
-  merkleweb: '//gateway.ipfs.ip/ipfs/Qmf1ec6n9f8kW8JTLjqaZceJVpDpZD4L3aPoJFvssBE7Eb/merkledag'
+  merkleweb: 'http://gateway.ipfs.io/ipfs/QmbuH1ZExsQvzVEFFw9S2CivEkHrQ9KmCy6zbxSymq8X5r/merkleweb'
 }
 
 exports.types = {
-  mlink: '//merkle-link'
+  mlink: 'http://merkle-link'
 }
 
 exports.marshal = function () {}

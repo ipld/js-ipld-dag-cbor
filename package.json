@@ -30,7 +30,7 @@
   "dependencies": {
     "cbor": "^0.3.14",
     "jsonld": "^0.3.24",
-    "multihash": "^0.1.0"
+    "multihashing": "^0.1.3"
   },
   "devDependencies": {
     "code": "^1.5.0",
