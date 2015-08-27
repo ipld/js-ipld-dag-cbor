@@ -1,5 +1,5 @@
 {
   "@context": {
-    "mlink": "merkle-link",
+    "mlink": "http://schema.org/url",
   }
 }
