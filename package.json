@@ -1,0 +1,40 @@
+{
+  "name": "node-ipld",
+  "version": "0.0.0",
+  "description": "Node.js implementation of the IPLD (InterpPlanetary Linked Data)",
+  "main": "src/index.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "test": "./node_modules/.bin/lab tests/*-test.js",
+    "codestyle": "./node_modules/.bin/standard --format"
+  },
+  "pre-commit": [
+    "codestyle"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/diasdavid/node-ipld.git"
+  },
+  "keywords": [
+    "IPFS"
+  ],
+  "author": "David Dias <daviddias@ipfs.io>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/diasdavid/node-ipld/issues"
+  },
+  "homepage": "https://github.com/diasdavid/node-ipld",
+  "dependencies": {
+    "cbor": "^0.3.14",
+    "jsonld": "^0.3.24",
+    "multihash": "^0.1.0"
+  },
+  "devDependencies": {
+    "code": "^1.5.0",
+    "lab": "^5.15.2",
+    "pre-commit": "^1.1.1",
+    "standard": "^5.1.0"
+  }
+}
