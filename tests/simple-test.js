@@ -16,7 +16,7 @@ experiment('JSONLD+CBOR+multihash test', function () {
   test('create a MerkleDAG none', function (done) {
     var node = {
       data: new Buffer('aaaah the data!'),
-      mlink: null
+      mlink: 'David'
     }
 
     jsonld.compact(node, ipld.context.merkleweb, function (err, compacted) {

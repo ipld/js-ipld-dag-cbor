@@ -1,5 +1,6 @@
 {
-  "@context": {
-    "mlink": "http://schema.org/url",
+  "mlink": {
+    "@id": "http://schema.org/name",
+    "@type": "@id"
   }
 }
