@@ -11,7 +11,7 @@ var ipld = require('../src')
 var jsonld = require('jsonld')
 
 experiment('JSONLD+CBOR+multihash test', function () {
-  //  var merkleDB = {} // simple object store for our MerkleDAG nodes
+//  var merkleDB = {} // simple object store for our MerkleDAG nodes
 
   test('jsonld example', function (done) {
     var doc = {
@@ -49,9 +49,10 @@ experiment('JSONLD+CBOR+multihash test', function () {
 
   test('create a MerkleDAG none', function (done) {
     var node = {
+      '@context': 'http://gateway.ipfs.io/ipfs/QmeuyZfvkugKe65pb6hHGJ9M61RAnFUoZ8PY5yhWmCo6Lq/merkleweb',
       data: new Buffer('aaaah the data!'),
       other: 'aaa',
-      mlink: []
+      mlink: 'sdadas'
     }
 
     /*
