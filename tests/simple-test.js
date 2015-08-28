@@ -8,23 +8,50 @@ var expect = Code.expect
 
 // var multihash = require('multihashing')
 var ipld = require('../src')
-var jsonld = require('jsonld')
 
 experiment('JSONLD+CBOR+multihash test', function () {
 //  var merkleDB = {} // simple object store for our MerkleDAG nodes
 
-  test('create a MerkleDAG none', function (done) {
+  test('add a mlink to a json blob', function (done) {
     var node = {
-      '@context': ipld.context.merkleweb,
-      foo: {
-        '@type': 'mlink'
+      data: 'aaah the data'
+    }
+
+    ipld.addLink(node, 'random-key', new Buffer('givemethehassssh'))
+
+    var expected = {
+      data: 'aaah the data',
+      'random-key': {
+        '@type': 'http://merkle-link',
+        '@value': new Buffer(['103', '105', '118', '101', '109', '101', '116', '104', '101', '104', '97', '115', '115', '115', '115', '104'])
       }
     }
 
-    jsonld.compact(node, ipld.context.merkleweb, function (err, compacted) {
+    expect(node).to.deep.equal(expected)
+    done()
+  })
+
+  test('serialize a node', function (done) {
+    var node = {
+      data: 'aaah the data'
+    }
+
+    ipld.addLink(node, 'random-key', new Buffer('givemethehassssh'))
+
+    var expected = {
+      data: 'aaah the data',
+      'random-key': {
+        '@type': 'http://merkle-link',
+        '@value': new Buffer(['103', '105', '118', '101', '109', '101', '116', '104', '101', '104', '97', '115', '115', '115', '115', '104'])
+      }
+    }
+
+    var serialized = ipld.marshal(node)
+    ipld.unmarshal(serialized, function (err, obj) {
       expect(err).to.equal(null)
-      console.log(compacted)
+      expect(obj[0]).to.deep.equal(expected)
       done()
     })
   })
+
 })
