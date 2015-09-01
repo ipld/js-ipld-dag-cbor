@@ -7,10 +7,6 @@
     "example": "examples"
   },
   "scripts": {
-    "uniq": "uniq versions versionstmp && mv versionstmp versions",
-    "publish": "sh publish.sh",
-    "refresh": "npm run publish && npm run uniq",
-    "test-refresh": "npm run refresh && ./node_modules/.bin/lab tests/*-test.js",
     "test": "./node_modules/.bin/lab tests/*-test.js",
     "codestyle-fix": "./node_modules/.bin/standard --format",
     "codestyle": "./node_modules/.bin/standard"

@@ -5,7 +5,6 @@ var lab = exports.lab = Lab.script()
 var test = lab.test
 var expect = Code.expect
 
-// var multihash = require('multihashing')
 var ipld = require('../src')
 
 test('add the mlink as context a json blob', function (done) {
@@ -29,7 +28,7 @@ test('add the mlink as context a json blob', function (done) {
 test('expand', function (done) {
   var node = {
     data: 'aaah the data',
-    mlink: 'GIMETHEHASSSSSH'
+    mlink: 'gimethehasssssh'
   }
 
   node['@context'] = ipld.context.merkleweb
