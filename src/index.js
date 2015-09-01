@@ -39,7 +39,8 @@ exports.expand = function (obj, contexts) {
   var strObj = JSON.stringify(objC)
   ctx.forEach(function (context) {
     Object.keys(context).forEach(function (key) {
-      strObj = strObj.replace(key + '', '' + context[key])
+      var re = new RegExp(key, 'g')
+      strObj = strObj.replace(re, '' + context[key])
     })
   })
 

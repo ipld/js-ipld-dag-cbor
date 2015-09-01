@@ -28,7 +28,7 @@ test('add the mlink as context a json blob', function (done) {
 test('expand', function (done) {
   var node = {
     data: 'aaah the data',
-    mlink: 'gimethehasssssh'
+    mlink: 'GIMETHEHASSSSSH'
   }
 
   node['@context'] = ipld.context.merkleweb
