@@ -1,5 +1,6 @@
 var cbor = require('cbor')
 var clone = require('./clone')
+var remapKeys = require('remap-keys')
 
 exports = module.exports
 
@@ -35,16 +36,11 @@ exports.expand = function (obj, contexts) {
     }
   }
 
-  // so hacky
-  var strObj = JSON.stringify(objC)
   ctx.forEach(function (context) {
-    Object.keys(context).forEach(function (key) {
-      var re = new RegExp(key, 'g')
-      strObj = strObj.replace(re, '' + context[key])
-    })
+    objC = remapKeys(objC, context)
   })
 
-  return JSON.parse(strObj)
+  return objC
 }
 
 exports.marshal = function (obj) {

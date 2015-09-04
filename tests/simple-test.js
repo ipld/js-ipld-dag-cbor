@@ -42,6 +42,27 @@ test('expand', function (done) {
   done()
 })
 
+test('expand nested', function (done) {
+  var node = {
+    data: 'aaah the data',
+    foo: {
+      mlink: 'GIMETHEHASSSSSH'
+    }
+  }
+
+  node['@context'] = ipld.context.merkleweb
+
+  var expected = {
+    data: 'aaah the data',
+    foo: {
+      'http://merkle-link': 'GIMETHEHASSSSSH'
+    }
+  }
+
+  expect(ipld.expand(node)).to.deep.equal(expected)
+  done()
+})
+
 test('marshel and unmarshal', function (done) {
   var node = {
     data: 'aaah the data',

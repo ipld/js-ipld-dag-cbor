@@ -30,7 +30,9 @@
   "dependencies": {
     "cbor": "^0.3.14",
     "jsonld": "^0.3.24",
-    "multihashing": "^0.1.3"
+    "multihashing": "^0.1.3",
+    "remap-keys": "^1.0.0",
+    "underscore": "^1.8.3"
   },
   "devDependencies": {
     "code": "^1.5.0",
