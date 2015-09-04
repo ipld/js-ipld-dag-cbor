@@ -1,6 +1,6 @@
 {
   "name": "ipld",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Node.js implementation of the IPLD (InterpPlanetary Linked Data)",
   "main": "src/index.js",
   "directories": {
