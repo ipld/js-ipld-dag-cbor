@@ -42,6 +42,23 @@ test('expand', function (done) {
   done()
 })
 
+test('expand with buffer as val', function (done) {
+  var node = {
+    data: 'aaah the data',
+    mlink: new Buffer('GIVEMETHEHASH')
+  }
+
+  node['@context'] = ipld.context.merkleweb
+
+  var expected = {
+    data: 'aaah the data',
+    'http://merkle-link': new Buffer('GIVEMETHEHASH')
+  }
+
+  expect(ipld.expand(node)).to.deep.equal(expected)
+  done()
+})
+
 test('expand nested', function (done) {
   var node = {
     data: 'aaah the data',
