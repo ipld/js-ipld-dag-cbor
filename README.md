@@ -34,8 +34,9 @@ console.log(ipld.expand(node))
 ### marshal and unmarshal
 
 ```
-ipld.marshal(obj) // returns Buffer with CBOR encoded obj
-ipld.unmarshal(buf, function (err, result) {})
+var encoded = ipld.marshal(obj) // returns Buffer with CBOR encoded obj
+var decoded = ipld.unmarshal(encoded)
+ipld.unmarshalAsync(buf, function (err, decoded) {})
 ```
 
 
