@@ -1,4 +1,6 @@
 var cbor = require('cbor')
+var cborSync = require('cbor-sync')
+
 var clone = require('./clone')
 var remapKeys = require('remap-keys')
 
@@ -47,6 +49,10 @@ exports.marshal = function (obj) {
   return cbor.encode(obj)
 }
 
-exports.unmarshal = function (buf, cb) {
+exports.unmarshal = function (buf) {
+  return cborSync.decode(buf)
+}
+
+exports.unmarshalAsync = function (buf, cb) {
   cbor.decode(buf, cb)
 }

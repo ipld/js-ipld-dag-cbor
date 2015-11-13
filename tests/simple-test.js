@@ -88,14 +88,33 @@ test('marshel and unmarshal', function (done) {
 
   node['@context'] = ipld.context.merkleweb
 
-  ipld.unmarshal(ipld.marshal(node), function (err, result) {
+  ipld.unmarshalAsync(ipld.marshal(node), function (err, result) {
     expect(err).to.equal(null)
     var expected = {
       data: 'aaah the data',
       'http://merkle-link': 'GIMETHEHASSSSSH'
     }
 
-    expect(ipld.expand(node)).to.deep.equal(expected)
+    expect(ipld.expand(result[0])).to.deep.equal(expected)
     done()
   })
+})
+
+test('marshel and unmarshal Sync', function (done) {
+  var node = {
+    data: 'aaah the data',
+    mlink: 'GIMETHEHASSSSSH'
+  }
+
+  node['@context'] = ipld.context.merkleweb
+
+  var result = ipld.unmarshal(ipld.marshal(node))
+
+  var expected = {
+    data: 'aaah the data',
+    'http://merkle-link': 'GIMETHEHASSSSSH'
+  }
+
+  expect(ipld.expand(result)).to.deep.equal(expected)
+  done()
 })
