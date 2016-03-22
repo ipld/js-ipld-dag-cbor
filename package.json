@@ -30,7 +30,6 @@
   "dependencies": {
     "cbor": "^0.3.14",
     "cbor-sync": "^1.0.2",
-    "jsonld": "^0.4.1",
     "multihashing": "^0.1.3",
     "remap-keys": "^1.0.1",
     "underscore": "^1.8.3"
