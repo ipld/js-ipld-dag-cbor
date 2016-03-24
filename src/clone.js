@@ -1,4 +1,5 @@
 // http://jsperf.com/cloning-an-object/2
+'use strict'
 
 exports = module.exports = function clone (obj) {
   var target = {}
