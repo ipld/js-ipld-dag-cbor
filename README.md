@@ -17,28 +17,21 @@ $ npm i --save ipld
 
 ## Usage
 
-### IPLD Objects
-
-```js
-const IPLD = requrie('ipld').IPLD
-
-const simple = new IPLD({
-  name: 'hello.txt',
-  size: 11
-})
-
-console.log(simple.hash)
-// => QmQtX5JVbRa25LmQ1LHFChkXWW5GaWrp7JpymN4oPuBSmL
-
-console.log(simple.resolve('size'))
-// => 11
-```
-
-#### Marshal and Unmarshal
-
 ```js
 const ipld = require('ipld')
 
-const encoded = ipld.marshal(obj) // returns Buffer with CBOR encoded obj
-const decoded = ipld.unmarshal(encoded)
+const file = {
+  name: 'hello.txt',
+  size: 11
+}
+
+// CBOR encoded Buffer
+const marshalled = ipld.marshal(file)
+
+console.log(ipld.multihash(marshalled))
+// => QmQtX5JVbRa25LmQ1LHFChkXWW5GaWrp7JpymN4oPuBSmL
+
+// Convert CBOR object to JavaScript object
+console.log(ipld.unmarshal(marshalled) === file)
+// => true
 ```
