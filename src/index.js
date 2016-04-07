@@ -1,3 +1,5 @@
+'use strict'
+
 var cbor = require('cbor')
 var cborSync = require('cbor-sync')
 
@@ -54,5 +56,5 @@ exports.unmarshal = function (buf) {
 }
 
 exports.unmarshalAsync = function (buf, cb) {
-  cbor.decode(buf, cb)
+  cbor.decodeAll(buf, cb)
 }

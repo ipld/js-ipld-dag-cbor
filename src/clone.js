@@ -1,3 +1,5 @@
+'use strict'
+
 // http://jsperf.com/cloning-an-object/2
 
 exports = module.exports = function clone (obj) {
