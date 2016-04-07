@@ -6,7 +6,7 @@
   "scripts": {
     "test": "dignified-test",
     "test:browser": "dignified-test browser",
-    "test:node": "dignified-test browser",
+    "test:node": "dignified-test node",
     "lint": "dignified-lint",
     "release": "dignified-release"
   },
@@ -32,10 +32,10 @@
   "homepage": "https://github.com/diasdavid/js-ipld",
   "dependencies": {
     "cbor": "^1.0.1",
-    "cbor-sync": "^1.0.2",
-    "multihashing": "^0.2.0",
-    "remap-keys": "^1.0.1",
-    "underscore": "^1.8.3"
+    "lodash.defaults": "^4.0.1",
+    "lodash.includes": "^4.1.2",
+    "multiaddr": "^1.3.0",
+    "nofilter": "0.0.2"
   },
   "devDependencies": {
     "chai": "^3.5.0",
