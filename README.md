@@ -17,8 +17,24 @@ $ npm i --save ipld
 
 ## Usage
 
+### IPLD Objects
 
-### Marshal and Unmarshal
+```js
+const IPLD = requrie('ipld').IPLD
+
+const simple = new IPLD({
+  name: 'hello.txt',
+  size: 11
+})
+
+console.log(simple.hash)
+// => QmQtX5JVbRa25LmQ1LHFChkXWW5GaWrp7JpymN4oPuBSmL
+
+console.log(simple.resolve('size'))
+// => 11
+```
+
+#### Marshal and Unmarshal
 
 ```js
 const ipld = require('ipld')
