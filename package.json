@@ -39,6 +39,7 @@
     "lodash.includes": "^4.1.2",
     "multiaddr": "^1.3.0",
     "multihashes": "^0.2.0",
+    "multihashing": "^0.2.0",
     "nofilter": "0.0.2"
   },
   "devDependencies": {

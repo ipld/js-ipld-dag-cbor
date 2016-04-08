@@ -1,7 +1,7 @@
 'use strict'
 
 const crypto = require('crypto')
-const multihashes = require('multihashes')
+const multihashing = require('multihashing')
 const bs58 = require('bs58')
 
 exports = module.exports = function multihash (obj) {
@@ -10,10 +10,6 @@ exports = module.exports = function multihash (obj) {
     obj = obj.marshal()
   }
 
-  const hash = crypto.createHash('sha256')
-          .update(obj).digest()
-
-  const multi = multihashes(hash, 'sha2-256')
-
+  const multi = multihashing(obj, 'sha2-256')
   return bs58.encode(multi)
 }
