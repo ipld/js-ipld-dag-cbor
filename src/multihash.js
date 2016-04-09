@@ -1,6 +1,5 @@
 'use strict'
 
-const crypto = require('crypto')
 const multihashing = require('multihashing')
 const bs58 = require('bs58')
 

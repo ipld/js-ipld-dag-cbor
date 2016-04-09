@@ -6,12 +6,15 @@ const Multiaddr = require('multiaddr')
 const NoFilter = require('nofilter')
 const defaults = require('lodash.defaults')
 const includes = require('lodash.includes')
+const cloneDeep = require('lodash.cloneDeep')
 
 exports = module.exports
 
 exports.LINK_TAG = 258
 
-exports.marshal = (input) => {
+exports.marshal = (original) => {
+  const input = cloneDeep(original)
+
   function transform (obj) {
     const keys = Object.keys(obj)
 

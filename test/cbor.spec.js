@@ -124,6 +124,18 @@ describe('IPLD -> CBOR', () => {
       cbor.encode(expected)
     )
   })
+
+  it('does not modify the input', () => {
+    let src = {
+      '@link': 'hello'
+    }
+
+    ipld.marshal(src)
+
+    expect(src).to.be.eql({
+      '@link': 'hello'
+    })
+  })
 })
 
 describe('CBOR -> IPLD', () => {
