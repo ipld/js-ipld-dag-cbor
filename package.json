@@ -36,6 +36,7 @@
   },
   "homepage": "https://github.com/diasdavid/js-ipld",
   "dependencies": {
+    "babel-runtime": "^6.6.1",
     "bs58": "^3.0.0",
     "cbor": "^1.0.1",
     "lodash.clonedeep": "^4.3.2",
