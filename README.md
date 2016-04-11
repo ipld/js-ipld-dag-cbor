@@ -1,21 +1,47 @@
 js-ipld
 =======
 
-[![](https://img.shields.io/badge/made%20by-Protocol%20Labs-blue.svg?style=flat-square)](http://ipn.io) [![](https://img.shields.io/badge/project-IPFS-blue.svg?style=flat-square)](http://ipfs.io/) [![](https://img.shields.io/badge/freenode-%23ipfs-blue.svg?style=flat-square)](http://webchat.freenode.net/?channels=%23ipfs) [![Dependency Status](https://david-dm.org/diasdavid/js-ipld.svg?style=flat-square)](https://david-dm.org/diasdavid/js-ipld)
-[![Travis CI](https://travis-ci.org/diasdavid/js-ipld.svg?branch=master)](https://travis-ci.org/diasdavid/js-ipld)
+[![](https://img.shields.io/badge/made%20by-Protocol%20Labs-blue.svg?style=flat-square)](http://ipn.io) 
+[![](https://img.shields.io/badge/project-IPFS-blue.svg?style=flat-square)](http://ipfs.io/) 
+[![](https://img.shields.io/badge/freenode-%23ipfs-blue.svg?style=flat-square)](http://webchat.freenode.net/?channels=%23ipfs) 
+[![Dependency Status](https://david-dm.org/ipfs/js-ipld.svg?style=flat-square)](https://david-dm.org/ipfs/js-ipld)
+[![Travis CI](https://travis-ci.org/ipfs/js-ipld.svg?branch=master)](https://travis-ci.org/ipfs/js-ipld)
 
-> JavaScript implementation of the [IPLD spec](https://github.com/ipfs/specs/blob/master/merkledag/ipld.md).
+> JavaScript implementation of the [IPLD spec](https://github.com/ipfs/specs/tree/master/ipld).
 
-## Installation
+# Installation
 
-### Node.js
+## npm
 
-```bash
-$ npm i --save ipld
+```sh
+> npm i ipld
 ```
 
+## Use in Node.js
 
-## Usage
+```js
+const ipld = require('ipld')
+```
+
+## Use in a browser with browserify, webpack or any other bundler
+
+The code published to npm that gets loaded on require is in fact a ES5 transpiled version with the right shims added. This means that you can require it and use with your favourite bundler without having to adjust asset management process.
+
+```JavaScript
+var ipld = require('ipld')
+```
+
+## Use in a browser Using a script tag
+
+Loading this module through a script tag will make the `Unixfs` obj available in the global namespace.
+
+```html
+<script src="https://npmcdn.com/ipld/dist/index.min.js"></script>
+<!-- OR -->
+<script src="https://npmcdn.com/ipld/dist/index.js"></script>
+```
+
+# Usage
 
 ```js
 const ipld = require('ipld')
