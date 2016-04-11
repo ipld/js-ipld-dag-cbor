@@ -9,6 +9,8 @@
     "test:node": "dignified-test node",
     "lint": "dignified-lint",
     "release": "dignified-release",
+    "release-minor": "dignified-release minor",
+    "release-major": "dignified-release major",
     "build": "dignified-build",
     "coverage": "dignified-coverage"
   },
