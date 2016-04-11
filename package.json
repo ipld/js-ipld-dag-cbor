@@ -1,6 +1,6 @@
 {
   "name": "ipld",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "JavaScript implementation of the IPLD (InterpPlanetary Linked Data)",
   "main": "lib/index.js",
   "jsnext:main": "src/index.js",
