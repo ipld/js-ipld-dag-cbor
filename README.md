@@ -1,42 +1,37 @@
 js-ipld
 =======
 
-[![](https://img.shields.io/badge/made%20by-Protocol%20Labs-blue.svg?style=flat-square)](http://ipn.io) [![](https://img.shields.io/badge/project-IPFS-blue.svg?style=flat-square)](http://ipfs.io/) [![](https://img.shields.io/badge/freenode-%23ipfs-blue.svg?style=flat-square)](http://webchat.freenode.net/?channels=%23ipfs)
+[![](https://img.shields.io/badge/made%20by-Protocol%20Labs-blue.svg?style=flat-square)](http://ipn.io) [![](https://img.shields.io/badge/project-IPFS-blue.svg?style=flat-square)](http://ipfs.io/) [![](https://img.shields.io/badge/freenode-%23ipfs-blue.svg?style=flat-square)](http://webchat.freenode.net/?channels=%23ipfs) [![Dependency Status](https://david-dm.org/diasdavid/js-ipld.svg?style=flat-square)](https://david-dm.org/diasdavid/js-ipld)
+[![Travis CI](https://travis-ci.org/diasdavid/js-ipld.svg?branch=master)](https://travis-ci.org/diasdavid/js-ipld)
 
-> JavaScript implementation of the IPLD spec.
+> JavaScript implementation of the [IPLD spec](https://github.com/ipfs/specs/blob/master/merkledag/ipld.md).
 
-# Description
+## Installation
 
-# Usage
+### Node.js
 
-### IPLD contexts and types
-
-```JavaScript
-console.log(ipld.context)
-# { merkleweb: { mlink: 'http://merkle-link' } }
-console.log(ipld.type)
-# { mlink: 'http://merkle-link' }
+```bash
+$ npm i --save ipld
 ```
 
-### expand an obj
 
-```
-var node = {
-  data: 'aaah the data',
-  mlink: 'QmdasdSHJKDADHAgimethehasssssh' // should be a valid IPFS hash
+## Usage
+
+```js
+const ipld = require('ipld')
+
+const file = {
+  name: 'hello.txt',
+  size: 11
 }
 
-node['@context'] = ipld.context.merkleweb
-console.log(ipld.expand(node))
-# { data: 'aaah the data', 'http://merkle-link': 'QmdasdSHJKDADHAgimethehasssssh'}
+// CBOR encoded Buffer
+const marshalled = ipld.marshal(file)
+
+console.log(ipld.multihash(marshalled))
+// => QmQtX5JVbRa25LmQ1LHFChkXWW5GaWrp7JpymN4oPuBSmL
+
+// Convert CBOR object to JavaScript object
+console.log(ipld.unmarshal(marshalled) === file)
+// => true
 ```
-
-### marshal and unmarshal
-
-```
-var encoded = ipld.marshal(obj) // returns Buffer with CBOR encoded obj
-var decoded = ipld.unmarshal(encoded)
-ipld.unmarshalAsync(buf, function (err, decoded) {})
-```
-
-
