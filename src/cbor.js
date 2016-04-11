@@ -6,7 +6,7 @@ const Multiaddr = require('multiaddr')
 const NoFilter = require('nofilter')
 const defaults = require('lodash.defaults')
 const includes = require('lodash.includes')
-const cloneDeep = require('lodash.cloneDeep')
+const cloneDeep = require('lodash.clonedeep')
 
 exports = module.exports
 
