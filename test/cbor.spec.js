@@ -8,7 +8,7 @@ const Multiaddr = require('multiaddr')
 const ipld = require('../src')
 
 describe('IPLD -> CBOR', () => {
-  it('no @link', () => {
+  it('no &', () => {
     const src = {
       data: 'hello world',
       size: 11
@@ -26,20 +26,18 @@ describe('IPLD -> CBOR', () => {
     )
   })
 
-  it('@link, is a string', () => {
+  it('&, is a string', () => {
     const src = {
       data: 'hello world',
       size: 11,
-      '@link': 'hello-world'
+      l1: {'&': 'hello-world'}
     }
 
-    const expected = new cbor.Tagged(ipld.LINK_TAG, [
-      'hello-world',
-      {
-        data: 'hello world',
-        size: 11
-      }
-    ])
+    const expected = {
+      data: 'hello world',
+      size: 11,
+      l1: new cbor.Tagged(ipld.LINK_TAG, 'hello-world')
+    }
 
     expect(
       ipld.marshal(src)
@@ -48,21 +46,19 @@ describe('IPLD -> CBOR', () => {
     )
   })
 
-  it('@link, is a valid multiaddress', () => {
+  it('&, is a valid multiaddress', () => {
     const addr = new Multiaddr('/ip4/127.0.0.1/udp/1234')
     const src = {
       data: 'hello world',
       size: 11,
-      '@link': addr.toString()
+      l1: {'&': addr.toString()}
     }
 
-    const expected = new cbor.Tagged(ipld.LINK_TAG, [
-      addr.buffer,
-      {
-        data: 'hello world',
-        size: 11
-      }
-    ])
+    const expected = {
+      data: 'hello world',
+      size: 11,
+      l1: new cbor.Tagged(ipld.LINK_TAG, addr.buffer)
+    }
 
     expect(
       ipld.marshal(src)
@@ -71,52 +67,41 @@ describe('IPLD -> CBOR', () => {
     )
   })
 
-  it('@link, with properties', () => {
+  it('&, with properties', () => {
     const src = {
       data: 'hello world',
       size: 11,
       secret: {
-        '@link': 'hello-world',
+        '&': 'hello-world',
         secret: 3
+      }
+    }
+
+    expect(
+      () => ipld.marshal(src)
+    ).to.throw(
+      'Links must not have siblings'
+    )
+  })
+
+  it('nested &', () => {
+    const src = {
+      data: 'hello world',
+      size: 11,
+      l1: {'&': 'hello-world'},
+      secret: {
+        l1: {'&': 'secret-link'}
       }
     }
 
     const expected = {
       data: 'hello world',
       size: 11,
-      secret: new cbor.Tagged(ipld.LINK_TAG, [
-        'hello-world',
-        {
-          secret: 3
-        }
-      ])
-    }
-
-    expect(
-      ipld.marshal(src)
-    ).to.be.eql(
-      cbor.encode(expected)
-    )
-  })
-
-  it('nested @link', () => {
-    const src = {
-      data: 'hello world',
-      size: 11,
-      '@link': 'hello-world',
+      l1: new cbor.Tagged(ipld.LINK_TAG, 'hello-world'),
       secret: {
-        '@link': 'secret-link'
+        l1: new cbor.Tagged(ipld.LINK_TAG, 'secret-link')
       }
     }
-
-    const expected = new cbor.Tagged(ipld.LINK_TAG, [
-      'hello-world',
-      {
-        data: 'hello world',
-        size: 11,
-        secret: new cbor.Tagged(ipld.LINK_TAG, 'secret-link')
-      }
-    ])
 
     expect(
       ipld.marshal(src)
@@ -127,13 +112,13 @@ describe('IPLD -> CBOR', () => {
 
   it('does not modify the input', () => {
     let src = {
-      '@link': 'hello'
+      l1: {'&': 'hello'}
     }
 
     ipld.marshal(src)
 
     expect(src).to.be.eql({
-      '@link': 'hello'
+      l1: {'&': 'hello'}
     })
   })
 })
@@ -168,71 +153,7 @@ describe('CBOR -> IPLD', () => {
       data: 'hello world',
       size: 11,
       nested: {
-        '@link': 'hello-world'
-      }
-    }
-
-    expect(
-      ipld.unmarshal(src)
-    ).to.be.eql(
-      target
-    )
-  })
-
-  it('one link, with properties', () => {
-    const src = cbor.encode({
-      data: 'hello world',
-      size: 11,
-      nested: new cbor.Tagged(ipld.LINK_TAG, [
-        'hello-world',
-        {cool: 'property'}
-      ])
-    })
-
-    const target = {
-      data: 'hello world',
-      size: 11,
-      nested: {
-        '@link': 'hello-world',
-        cool: 'property'
-      }
-    }
-
-    expect(
-      ipld.unmarshal(src)
-    ).to.be.eql(
-      target
-    )
-  })
-
-  it('nested links, with properties', () => {
-    const src = cbor.encode({
-      data: 'hello world',
-      size: 11,
-      secret: {
-        links: [
-          new cbor.Tagged(ipld.LINK_TAG, 'secret-link')
-        ]
-      },
-      nested: new cbor.Tagged(ipld.LINK_TAG, [
-        'hello-world',
-        {
-          cool: 'property',
-          ref: new cbor.Tagged(ipld.LINK_TAG, 'world')
-        }
-      ])
-    })
-
-    const target = {
-      data: 'hello world',
-      size: 11,
-      secret: {
-        links: [{'@link': 'secret-link'}]
-      },
-      nested: {
-        '@link': 'hello-world',
-        cool: 'property',
-        ref: {'@link': 'world'}
+        '&': 'hello-world'
       }
     }
 
