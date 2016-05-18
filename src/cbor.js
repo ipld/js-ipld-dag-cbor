@@ -11,6 +11,7 @@ const cloneDeep = require('lodash.clonedeep')
 exports = module.exports
 
 exports.LINK_TAG = 258
+const LINK_SYMBOL = exports.LINK_SYMBOL = '/'
 
 exports.marshal = (original) => {
   const input = cloneDeep(original)
@@ -25,8 +26,8 @@ exports.marshal = (original) => {
       }
     })
 
-    if (includes(keys, '@link')) {
-      let link = obj['@link']
+    if (includes(keys, LINK_SYMBOL)) {
+      let link = obj[LINK_SYMBOL]
 
       // Multiaddr encoding
       if (typeof link === 'string' && isMultiaddr(link)) {
@@ -34,14 +35,11 @@ exports.marshal = (original) => {
       }
 
       // Remove the @link
-      delete obj['@link']
+      delete obj[LINK_SYMBOL]
 
       // Non empty
       if (keys.length > 1) {
-        return new cbor.Tagged(exports.LINK_TAG, [
-          link,
-          obj
-        ])
+        throw new Error('Links must not have siblings')
       }
 
       return new cbor.Tagged(exports.LINK_TAG, link)
@@ -69,14 +67,20 @@ exports.unmarshal = (input, opts) => {
   function transform (obj) {
     Object.keys(obj).forEach((key) => {
       const val = obj[key]
+      // This is safe as we reference the same cbor instance
+      // as we used to decode with
       if (val instanceof cbor.Tagged) {
         if (typeof val.value === 'string') {
           obj[key] = {
-            '@link': val.value
+            [LINK_SYMBOL]: val.value
+          }
+        } else if (Buffer.isBuffer(val.value)) {
+          obj[key] = {
+            [LINK_SYMBOL]: (new Multiaddr(val.value)).toString()
           }
         } else {
           obj[key] = defaults({
-            '@link': val.value[0]
+            [LINK_SYMBOL]: val.value[0]
           }, transform(val.value[1]))
         }
       } else if (typeof val === 'object') {
