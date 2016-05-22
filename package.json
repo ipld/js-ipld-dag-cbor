@@ -6,12 +6,12 @@
   "jsnext:main": "src/index.js",
   "scripts": {
     "test": "aegir-test",
-    "test:browser": "aegir-test browser",
-    "test:node": "aegir-test node",
+    "test:browser": "aegir-test --env browser",
+    "test:node": "aegir-test --env node",
     "lint": "aegir-lint",
     "release": "aegir-release",
-    "release-minor": "aegir-release minor",
-    "release-major": "aegir-release major",
+    "release-minor": "aegir-release --type minor",
+    "release-major": "aegir-release --type major",
     "build": "aegir-build",
     "coverage": "aegir-coverage",
     "coverage-publish": "aegir-coverage publish"
@@ -39,18 +39,18 @@
   "dependencies": {
     "babel-runtime": "^6.6.1",
     "bs58": "^3.0.0",
-    "cbor": "^1.0.3",
+    "cbor": "^1.0.4",
     "lodash.clonedeep": "^4.3.2",
     "lodash.defaults": "^4.0.1",
-    "lodash.includes": "^4.1.2",
-    "multiaddr": "^1.4.1",
-    "multihashes": "^0.2.1",
+    "lodash.includes": "^4.1.3",
+    "multiaddr": "^2.0.0",
+    "multihashes": "^0.2.2",
     "multihashing": "^0.2.1",
     "nofilter": "0.0.2"
   },
   "devDependencies": {
-    "aegir": "^3.0.0",
+    "aegir": "^3.0.4",
     "chai": "^3.5.0",
-    "pre-commit": "^1.1.2"
+    "pre-commit": "^1.1.3"
   }
 }
