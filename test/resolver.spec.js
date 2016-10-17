@@ -47,7 +47,7 @@ describe('IPLD format resolver (local)', () => {
         expect(result.value).to.equal('baz')
       })
 
-      it.skip('path out of scope', () => {
+      it('path out of scope', () => {
         const result = resolver.resolve(nodeBlock, 'someLink/a/b/c')
         expect(result.value).to.eql({ '/': 'LINK' })
         expect(result.remainderPath).to.equal('a/b/c')

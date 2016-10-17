@@ -45,6 +45,7 @@
     "lodash.clonedeep": "^4.3.2",
     "lodash.defaults": "^4.0.1",
     "lodash.includes": "^4.3.0",
+    "lodash.times": "^4.3.2",
     "multiaddr": "^2.0.0",
     "multihashes": "^0.2.2",
     "multihashing": "^0.2.1",

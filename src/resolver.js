@@ -1,6 +1,7 @@
 'use strict'
 
 const util = require('./util')
+const _times = require('lodash.times')
 
 exports = module.exports
 
@@ -11,7 +12,7 @@ exports.multicodec = 'dag-cbor'
  * throw if not possible. `block` is an IPFS Block instance (contains data + key)
  */
 exports.resolve = (block, path) => {
-  const node = util.deserialize(block.data)
+  let node = util.deserialize(block.data)
 
   // root
 
@@ -35,7 +36,40 @@ exports.resolve = (block, path) => {
   }
 
   // out of scope
-  // TODO
+
+  // TODO this was my first try at writting this out of scope traversal code,
+  // it REALLY needs way more testing.
+  path = path.split('/')
+  let value
+  let stop = false
+
+  _times(path.length, () => {
+    if (stop) {
+      return
+    }
+    let partialPath = path.shift()
+
+    if (Array.isArray(node) && !Buffer.isBuffer(node)) {
+      value = node[Number(partialPath)]
+    } if (node[partialPath]) {
+      value = node[partialPath]
+    } else {
+      // can't traverse more
+      if (!value) {
+        throw new Error('path not available at root')
+      } else {
+        stop = true
+        path.unshift(partialPath)
+        result = {
+          value: value,
+          remainderPath: path.length > 0 ? path.join('/') : ''
+        }
+      }
+    }
+    node = value
+  })
+
+  return result
 }
 
 /*
