@@ -11,7 +11,31 @@ exports.multicodec = 'dag-cbor'
  * throw if not possible. `block` is an IPFS Block instance (contains data + key)
  */
 exports.resolve = (block, path) => {
+  const node = util.deserialize(block.data)
 
+  // root
+
+  if (!path || path === '/') {
+    return { value: node, remainderPath: '' }
+  }
+
+  // within scope
+
+  const tree = exports.tree(block)
+  let result
+
+  tree.forEach((item) => {
+    if (item.path === path) {
+      result = { value: item.value, remainderPath: '' }
+    }
+  })
+
+  if (result) {
+    return result
+  }
+
+  // out of scope
+  // TODO
 }
 
 /*

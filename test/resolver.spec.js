@@ -37,7 +37,20 @@ describe('IPLD format resolver (local)', () => {
 
   describe('empty node', () => {
     describe('resolver.resolve', () => {
-      it.skip('path', () => {
+      it('path within scope', () => {
+        const result = resolver.resolve(nodeBlock, 'name')
+        expect(result.value).to.equal('I am a node')
+      })
+
+      it('path within scope, but nested', () => {
+        const result = resolver.resolve(nodeBlock, 'nest/foo/bar')
+        expect(result.value).to.equal('baz')
+      })
+
+      it.skip('path out of scope', () => {
+        const result = resolver.resolve(nodeBlock, 'someLink/a/b/c')
+        expect(result.value).to.eql({ '/': 'LINK' })
+        expect(result.remainderPath).to.equal('a/b/c')
       })
     })
 
