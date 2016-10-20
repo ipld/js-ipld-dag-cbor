@@ -124,6 +124,24 @@ describe('IPLD -> CBOR', () => {
       l1: {'/': 'hello'}
     })
   })
+
+  it('marshals objects with null values', () => {
+    const src = {
+      l1: {'/': 'hello'},
+      foo: null
+    }
+
+    const expected = {
+      l1: new cbor.Tagged(ipld.LINK_TAG, 'hello'),
+      foo: null
+    }
+
+    expect(
+      ipld.marshal(src)
+    ).to.be.eql(
+      cbor.encode(expected)
+    )
+  })
 })
 
 describe('CBOR -> IPLD', () => {

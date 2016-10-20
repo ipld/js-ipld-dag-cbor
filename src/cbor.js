@@ -17,6 +17,7 @@ exports.marshal = (original) => {
   const input = cloneDeep(original)
 
   function transform (obj) {
+    if (obj == null) return obj
     const keys = Object.keys(obj)
 
     // Recursive transform
