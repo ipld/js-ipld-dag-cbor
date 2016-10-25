@@ -37,6 +37,22 @@ describe('IPLD format resolver (local)', () => {
 
   describe('empty node', () => {
     describe('resolver.resolve', () => {
+      it('root', () => {
+        const result = resolver.resolve(emptyNodeBlock, '/')
+        expect(result.value).to.be.eql({})
+      })
+    })
+
+    it('resolver.tree', () => {
+      const paths = resolver.tree(emptyNodeBlock)
+      expect(paths).to.eql([])
+    })
+
+    it.skip('resolver.patch', (done) => {})
+  })
+
+  describe('node', () => {
+    describe('resolver.resolve', () => {
       it('path within scope', () => {
         const result = resolver.resolve(nodeBlock, 'name')
         expect(result.value).to.equal('I am a node')
@@ -51,20 +67,6 @@ describe('IPLD format resolver (local)', () => {
         const result = resolver.resolve(nodeBlock, 'someLink/a/b/c')
         expect(result.value).to.eql({ '/': 'LINK' })
         expect(result.remainderPath).to.equal('a/b/c')
-      })
-    })
-
-    it('resolver.tree', () => {
-      const paths = resolver.tree(emptyNodeBlock)
-      expect(paths).to.eql([])
-    })
-
-    it.skip('resolver.patch', (done) => {})
-  })
-
-  describe('node', () => {
-    describe.skip('resolver.resolve', () => {
-      it('path', () => {
       })
     })
 

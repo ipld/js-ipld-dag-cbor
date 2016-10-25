@@ -1,7 +1,6 @@
 'use strict'
 
 const util = require('./util')
-const _times = require('lodash.times')
 const traverse = require('traverse')
 
 exports = module.exports
@@ -23,32 +22,23 @@ exports.resolve = (block, path) => {
 
   // within scope
 
-  const tree = exports.tree(block)
-  let result
+  // const tree = exports.tree(block)
+  const parts = path.split('/')
+  const val = traverse(node).get(parts)
 
-  tree.forEach((item) => {
-    if (item.path === path) {
-      result = { value: item.value, remainderPath: '' }
-    }
-  })
-
-  if (result) {
-    return result
+  if (val) {
+    return { value: val, remainderPath: '' }
   }
+  console.log(val)
 
   // out of scope
 
   // TODO this was my first try at writting this out of scope traversal code,
   // it REALLY needs way more testing.
-  path = path.split('/')
   let value
-  let stop = false
 
-  _times(path.length, () => {
-    if (stop) {
-      return
-    }
-    let partialPath = path.shift()
+  for (let i = 0; i < parts.length; i++) {
+    let partialPath = parts.shift()
 
     if (Array.isArray(node) && !Buffer.isBuffer(node)) {
       value = node[Number(partialPath)]
@@ -59,18 +49,15 @@ exports.resolve = (block, path) => {
       if (!value) {
         throw new Error('path not available at root')
       } else {
-        stop = true
-        path.unshift(partialPath)
-        result = {
+        parts.unshift(partialPath)
+        return {
           value: value,
-          remainderPath: path.length > 0 ? path.join('/') : ''
+          remainderPath: parts.join('/')
         }
       }
     }
     node = value
-  })
-
-  return result
+  }
 }
 
 /*
