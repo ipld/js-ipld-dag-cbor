@@ -2,6 +2,7 @@
 
 const util = require('./util')
 const _times = require('lodash.times')
+const traverse = require('traverse')
 
 exports = module.exports
 
@@ -82,15 +83,7 @@ exports.tree = (block, options) => {
   }
 
   const node = util.deserialize(block.data)
-  const flatObj = flattenObject(node)
-  const paths = Object.keys(flatObj)
-                     .map((key) => {
-                       return {
-                         path: key,
-                         value: flatObj[key]
-                       }
-                     })
-  return paths
+  return flattenObject(node)
 }
 
 // TODO recheck this API
@@ -104,33 +97,18 @@ function flattenObject (obj, delimiter) {
     delimiter = '/'
   }
 
-  let toReturn = {}
-  let flatObject
-  for (let i in obj) {
-    if (!obj.hasOwnProperty(i)) {
-      continue
-    }
-
-    if (Array.isArray(obj[i])) {
-      continue
-    }
-
-    if ((typeof obj[i]) === 'object') {
-      flatObject = flattenObject(obj[i])
-      for (let x in flatObject) {
-        if (!flatObject.hasOwnProperty(x)) {
-          continue
-        }
-
-        if (flatObject[x] && Array === flatObject.constructor) {
-          continue
-        }
-
-        toReturn[i + (isNaN(x) ? delimiter + x : '')] = flatObject[x]
-      }
-    } else {
-      toReturn[i] = obj[i]
-    }
+  if (Object.keys(obj).length === 0) {
+    return []
   }
-  return toReturn
+
+  return traverse(obj).reduce(function (acc, x) {
+    if (this.isLeaf) {
+      acc.push({
+        path: this.path.join(delimiter),
+        value: x
+      })
+    }
+
+    return acc
+  }, [])
 }

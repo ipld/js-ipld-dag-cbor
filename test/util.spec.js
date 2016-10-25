@@ -6,8 +6,8 @@ const dagCBOR = require('../src')
 
 describe('util', () => {
   const obj = {
-    'someKey': 'someValue',
-    'link': { '/': 'aaaaa' }
+    someKey: 'someValue',
+    link: { '/': 'aaaaa' }
   }
 
   it('.serialize and .deserialize', () => {

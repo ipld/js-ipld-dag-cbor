@@ -39,9 +39,9 @@
   "dependencies": {
     "babel-runtime": "^6.6.1",
     "bs58": "^3.0.0",
-    "cbor": "^1.0.4",
+    "cbor": "^2.0.1",
     "cbor-sync": "^1.0.2",
-    "cids": "^0.1.1",
+    "cids": "^0.2.0",
     "lodash.clonedeep": "^4.3.2",
     "lodash.defaults": "^4.0.1",
     "lodash.includes": "^4.3.0",
@@ -49,7 +49,8 @@
     "multiaddr": "^2.0.0",
     "multihashes": "^0.2.2",
     "multihashing": "^0.2.1",
-    "nofilter": "0.0.2"
+    "nofilter": "0.0.3",
+    "traverse": "^0.6.6"
   },
   "devDependencies": {
     "aegir": "8.1.2",

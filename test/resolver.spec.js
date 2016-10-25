@@ -74,21 +74,19 @@ describe('IPLD format resolver (local)', () => {
         path: 'name',
         value: 'I am a node'
       }, {
-      // TODO confirm how to represent links in tree
+      // TODO: confirm how to represent links in tree
         path: 'someLink//',
         value: 'LINK'
       }, {
         path: 'nest/foo/bar',
         value: 'baz'
-      }
-      // TODO fix array in .tree
-      /*, {
+      }, {
         path: 'array/0/a',
         value: 'b'
       }, {
         path: 'array/1',
-        value: '2'
-      } */])
+        value: 2
+      }])
     })
 
     it.skip('resolver.patch', () => {})
