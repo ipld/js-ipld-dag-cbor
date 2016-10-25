@@ -11,13 +11,15 @@ describe('util', () => {
   }
 
   it('.serialize and .deserialize', (done) => {
-    const serialized = dagCBOR.util.serialize(obj)
-    expect(Buffer.isBuffer(serialized)).to.be.true
-
-    dagCBOR.util.deserialize(serialized, (err, deserialized) => {
+    dagCBOR.util.serialize(obj, (err, serialized) => {
       expect(err).to.not.exist
-      expect(obj).to.eql(deserialized)
-      done()
+      expect(Buffer.isBuffer(serialized)).to.be.true
+
+      dagCBOR.util.deserialize(serialized, (err, deserialized) => {
+        expect(err).to.not.exist
+        expect(obj).to.eql(deserialized)
+        done()
+      })
     })
   })
 

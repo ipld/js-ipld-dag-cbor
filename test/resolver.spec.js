@@ -6,12 +6,13 @@ const expect = require('chai').expect
 const dagCBOR = require('../src')
 const resolver = dagCBOR.resolver
 const Block = require('ipfs-block')
+const series = require('async/series')
 
 describe('IPLD format resolver (local)', () => {
   let emptyNodeBlock
   let nodeBlock
 
-  before(() => {
+  before((done) => {
     const emptyNode = {}
     const node = {
       name: 'I am a node',
@@ -25,11 +26,24 @@ describe('IPLD format resolver (local)', () => {
         { a: 'b' },
         2
       ]
-
     }
 
-    emptyNodeBlock = new Block(dagCBOR.util.serialize(emptyNode))
-    nodeBlock = new Block(dagCBOR.util.serialize(node))
+    series([
+      (cb) => {
+        dagCBOR.util.serialize(emptyNode, (err, serialized) => {
+          expect(err).to.not.exist
+          emptyNodeBlock = new Block(serialized)
+          cb()
+        })
+      },
+      (cb) => {
+        dagCBOR.util.serialize(node, (err, serialized) => {
+          expect(err).to.not.exist
+          nodeBlock = new Block(serialized)
+          cb()
+        })
+      }
+    ], done)
   })
 
   it('multicodec is dag-cbor', () => {
