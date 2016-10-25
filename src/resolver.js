@@ -45,13 +45,11 @@ exports.resolve = (block, path, callback) => {
     }
 
     // out of scope
-
-    // TODO this was my first try at writting this out of scope traversal code,
-    // it REALLY needs way more testing.
     let value
+    let len = parts.length
 
-    for (let i = 0; i < parts.length; i++) {
-      let partialPath = parts.shift()
+    for (let i = 0; i < len; i++) {
+      const partialPath = parts.shift()
 
       if (Array.isArray(node) && !Buffer.isBuffer(node)) {
         value = node[Number(partialPath)]

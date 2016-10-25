@@ -2,7 +2,7 @@
   "name": "ipld-dag-cbor",
   "version": "0.6.0",
   "description": "JavaScript implementation of the IPLD (InterpPlanetary Linked Data)",
-  "main": "src/index.js",
+  "main": "lib/index.js",
   "jsnext:main": "src/index.js",
   "scripts": {
     "test": "aegir-test",
@@ -49,6 +49,7 @@
     "aegir": "8.1.2",
     "async": "^2.1.2",
     "chai": "^3.5.0",
+    "ipfs-block": "^0.4.0",
     "pre-commit": "^1.1.3"
   },
   "contributors": [
