@@ -1,6 +1,6 @@
 'use strict'
 
-const cbor = require('cbor-sync')
+const cbor = require('cbor')
 const multihashing = require('multihashing')
 const CID = require('cids')
 const resolver = require('./resolver')
@@ -11,12 +11,12 @@ exports.serialize = (dagNode) => {
   return cbor.encode(dagNode)
 }
 
-exports.deserialize = (data) => {
-  return cbor.decode(data)
+exports.deserialize = (data, callback) => {
+  cbor.decodeFirst(data, callback)
 }
 
-exports.cid = (dagNode) => {
+exports.cid = (dagNode, callback) => {
   const serialized = exports.serialize(dagNode)
   const mh = multihashing(serialized, 'sha2-256')
-  return new CID(1, resolver.multicodec, mh)
+  callback(null, new CID(1, resolver.multicodec, mh))
 }

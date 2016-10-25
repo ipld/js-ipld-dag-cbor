@@ -40,7 +40,6 @@
     "babel-runtime": "^6.6.1",
     "bs58": "^3.0.0",
     "cbor": "^2.0.1",
-    "cbor-sync": "^1.0.2",
     "cids": "^0.2.0",
     "multihashes": "^0.2.2",
     "multihashing": "^0.2.1",

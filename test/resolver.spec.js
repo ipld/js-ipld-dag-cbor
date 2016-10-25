@@ -1,3 +1,4 @@
+/* eslint max-nested-callbacks: ["error", 8] */
 /* eslint-env mocha */
 'use strict'
 
@@ -37,58 +38,76 @@ describe('IPLD format resolver (local)', () => {
 
   describe('empty node', () => {
     describe('resolver.resolve', () => {
-      it('root', () => {
-        const result = resolver.resolve(emptyNodeBlock, '/')
-        expect(result.value).to.be.eql({})
+      it('root', (done) => {
+        resolver.resolve(emptyNodeBlock, '/', (err, result) => {
+          expect(err).to.not.exist
+          expect(result.value).to.be.eql({})
+          done()
+        })
       })
     })
 
-    it('resolver.tree', () => {
-      const paths = resolver.tree(emptyNodeBlock)
-      expect(paths).to.eql([])
+    it('resolver.tree', (done) => {
+      resolver.tree(emptyNodeBlock, (err, paths) => {
+        expect(err).to.not.exist
+        expect(paths).to.eql([])
+        done()
+      })
     })
 
-    it.skip('resolver.patch', (done) => {})
+    it.skip('resolver.patch', () => {})
   })
 
   describe('node', () => {
     describe('resolver.resolve', () => {
-      it('path within scope', () => {
-        const result = resolver.resolve(nodeBlock, 'name')
-        expect(result.value).to.equal('I am a node')
+      it('path within scope', (done) => {
+        resolver.resolve(nodeBlock, 'name', (err, result) => {
+          expect(err).to.not.exist
+          expect(result.value).to.equal('I am a node')
+          done()
+        })
       })
 
-      it('path within scope, but nested', () => {
-        const result = resolver.resolve(nodeBlock, 'nest/foo/bar')
-        expect(result.value).to.equal('baz')
+      it('path within scope, but nested', (done) => {
+        resolver.resolve(nodeBlock, 'nest/foo/bar', (err, result) => {
+          expect(err).to.not.exist
+          expect(result.value).to.equal('baz')
+          done()
+        })
       })
 
-      it('path out of scope', () => {
-        const result = resolver.resolve(nodeBlock, 'someLink/a/b/c')
-        expect(result.value).to.eql({ '/': 'LINK' })
-        expect(result.remainderPath).to.equal('a/b/c')
+      it('path out of scope', (done) => {
+        resolver.resolve(nodeBlock, 'someLink/a/b/c', (err, result) => {
+          expect(err).to.not.exist
+          expect(result.value).to.eql({ '/': 'LINK' })
+          expect(result.remainderPath).to.equal('a/b/c')
+          done()
+        })
       })
     })
 
-    it('resolver.tree', () => {
-      const paths = resolver.tree(nodeBlock)
-      expect(paths).to.eql([{
-        path: 'name',
-        value: 'I am a node'
-      }, {
-      // TODO: confirm how to represent links in tree
-        path: 'someLink//',
-        value: 'LINK'
-      }, {
-        path: 'nest/foo/bar',
-        value: 'baz'
-      }, {
-        path: 'array/0/a',
-        value: 'b'
-      }, {
-        path: 'array/1',
-        value: 2
-      }])
+    it('resolver.tree', (done) => {
+      resolver.tree(nodeBlock, (err, paths) => {
+        expect(err).to.not.exist
+        expect(paths).to.eql([{
+          path: 'name',
+          value: 'I am a node'
+        }, {
+        // TODO: confirm how to represent links in tree
+          path: 'someLink//',
+          value: 'LINK'
+        }, {
+          path: 'nest/foo/bar',
+          value: 'baz'
+        }, {
+          path: 'array/0/a',
+          value: 'b'
+        }, {
+          path: 'array/1',
+          value: 2
+        }])
+        done()
+      })
     })
 
     it.skip('resolver.patch', () => {})
