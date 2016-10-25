@@ -97,12 +97,6 @@ exports.tree = (block, options, callback) => {
   })
 }
 
-// TODO recheck this API
-/*
- * patch: modifies or adds value on path, yields a new block with that change
- */
-exports.patch = (block, path, value) => {}
-
 function flattenObject (obj, delimiter) {
   if (!delimiter) {
     delimiter = '/'

@@ -54,8 +54,6 @@ describe('IPLD format resolver (local)', () => {
         done()
       })
     })
-
-    it.skip('resolver.patch', () => {})
   })
 
   describe('node', () => {
@@ -109,7 +107,5 @@ describe('IPLD format resolver (local)', () => {
         done()
       })
     })
-
-    it.skip('resolver.patch', () => {})
   })
 })
