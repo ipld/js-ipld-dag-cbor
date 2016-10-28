@@ -8,7 +8,11 @@ const resolver = require('./resolver')
 exports = module.exports
 
 exports.serialize = (dagNode, callback) => {
-  callback(null, cbor.encode(dagNode))
+  try {
+    callback(null, cbor.encode(dagNode))
+  } catch (err) {
+    callback(err)
+  }
 }
 
 exports.deserialize = (data, callback) => {
