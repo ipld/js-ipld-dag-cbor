@@ -23,6 +23,16 @@ describe('util', () => {
     })
   })
 
+  it('error catching', (done) => {
+    const circlarObj = {}
+    circlarObj.a = circlarObj
+    dagCBOR.util.serialize(circlarObj, (err, serialized) => {
+      expect(err).to.exist
+      expect(serialized).to.not.exist
+      done()
+    })
+  })
+
   it('.cid', (done) => {
     dagCBOR.util.cid(obj, (err, cid) => {
       expect(err).to.not.exist
