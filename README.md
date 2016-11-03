@@ -1,13 +1,17 @@
-# js-ipld
+# js-ipld-dag-cbor
 
 [![](https://img.shields.io/badge/made%20by-Protocol%20Labs-blue.svg?style=flat-square)](http://ipn.io)
 [![](https://img.shields.io/badge/project-IPFS-blue.svg?style=flat-square)](http://ipfs.io/)
 [![](https://img.shields.io/badge/freenode-%23ipfs-blue.svg?style=flat-square)](http://webchat.freenode.net/?channels=%23ipfs)
 [![standard-readme compliant](https://img.shields.io/badge/standard--readme-OK-green.svg?style=flat-square)](https://github.com/RichardLitt/standard-readme)
-[![Coverage Status](https://coveralls.io/repos/github/ipfs/js-ipld/badge.svg?branch=master)](https://coveralls.io/github/ipfs/js-ipld?branch=master)
-[![Travis CI](https://travis-ci.org/ipfs/js-ipld.svg?branch=master)](https://travis-ci.org/ipfs/js-ipld)
-[![Circle CI](https://circleci.com/gh/ipfs/js-ipld.svg?style=svg)](https://circleci.com/gh/ipfs/js-ipld)
-[![Dependency Status](https://david-dm.org/ipfs/js-ipld.svg?style=flat-square)](https://david-dm.org/ipfs/js-ipld) [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat-square)](https://github.com/feross/standard)
+[![Coverage Status](https://coveralls.io/repos/github/ipld/js-ipld-dag-cbor/badge.svg?branch=master)](https://coveralls.io/github/ipld/js-ipld-dag-cbor?branch=master)
+[![Travis CI](https://travis-ci.org/ipld/js-ipld-dag-cbor.svg?branch=master)](https://travis-ci.org/ipld/js-ipld-dag-cbor)
+[![Circle CI](https://circleci.com/gh/ipld/js-ipld-dag-cbor.svg?style=svg)](https://circleci.com/gh/ipld/js-ipld-dag-cbor)
+[![Dependency Status](https://david-dm.org/ipld/js-ipld-dag-cbor.svg?style=flat-square)](https://david-dm.org/ipld/js-ipld-dag-cbor) [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat-square)](https://github.com/feross/standard)
+![](https://img.shields.io/badge/npm-%3E%3D3.0.0-orange.svg?style=flat-square)
+![](https://img.shields.io/badge/Node.js-%3E%3D4.0.0-orange.svg?style=flat-square)
+
+[![Sauce Test Status](https://saucelabs.com/browser-matrix/ipld-js-dag-cbor.svg)](https://saucelabs.com/u/ipld-js-dag-cbor)
 
 > JavaScript implementation of the [IPLD spec](https://github.com/ipfs/specs/tree/master/ipld).
 
@@ -77,7 +81,7 @@ console.log(ipld.unmarshal(marshalled) === file)
 
 ## Contribute
 
-Feel free to join in. All welcome. Open an [issue](https://github.com/ipfs/js-ipld/issues)!
+Feel free to join in. All welcome. Open an [issue](https://github.com/ipld/js-ipld-dag-cbor/issues)!
 
 This repository falls under the IPFS [Code of Conduct](https://github.com/ipfs/community/blob/master/code-of-conduct.md).
 

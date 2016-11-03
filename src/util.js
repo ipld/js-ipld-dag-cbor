@@ -1,8 +1,10 @@
 'use strict'
 
 const cbor = require('cbor')
-const multihashing = require('multihashing')
+const multihashing = require('multihashing-async')
 const CID = require('cids')
+const waterfall = require('async/waterfall')
+
 const resolver = require('./resolver')
 
 exports = module.exports
@@ -23,11 +25,9 @@ exports.deserialize = (data, callback) => {
 }
 
 exports.cid = (dagNode, callback) => {
-  exports.serialize(dagNode, (err, serialized) => {
-    if (err) {
-      return callback(err)
-    }
-    const mh = multihashing(serialized, 'sha2-256')
-    callback(null, new CID(1, resolver.multicodec, mh))
-  })
+  waterfall([
+    (cb) => exports.serialize(dagNode, cb),
+    (serialized, cb) => multihashing(serialized, 'sha2-256', cb),
+    (mh, cb) => cb(null, new CID(1, resolver.multicodec, mh))
+  ], callback)
 }
