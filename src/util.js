@@ -1,9 +1,10 @@
 'use strict'
 
-const cbor = require('cbor')
+const cbor = require('borc')
 const multihashing = require('multihashing-async')
 const CID = require('cids')
 const waterfall = require('async/waterfall')
+const setImmediate = require('async/setImmediate')
 
 const resolver = require('./resolver')
 
@@ -15,13 +16,28 @@ exports.serialize = (dagNode, callback) => {
     serialized = cbor.encode(dagNode)
   } catch (err) {
     // return is important, otherwise in case of error the execution would continue
-    return callback(err)
+    return setImmediate(() => {
+      callback(err)
+    })
   }
-  callback(null, serialized)
+  setImmediate(() => {
+    callback(null, serialized)
+  })
 }
 
 exports.deserialize = (data, callback) => {
-  cbor.decodeFirst(data, callback)
+  let res
+  try {
+    res = cbor.decodeFirst(data)
+  } catch (err) {
+    return setImmediate(() => {
+      callback(err)
+    })
+  }
+
+  setImmediate(() => {
+    callback(null, res)
+  })
 }
 
 exports.cid = (dagNode, callback) => {
