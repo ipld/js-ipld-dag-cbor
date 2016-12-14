@@ -32,13 +32,13 @@
 ### npm
 
 ```sh
-> npm i ipld
+> npm install ipld-dag-cbor
 ```
 
 ### Use in Node.js
 
-```js
-const ipld = require('ipld')
+```JavaScript
+const dagCBOR = require('ipld-dag-cbor')
 ```
 
 ### Use in a browser with browserify, webpack or any other bundler
@@ -46,23 +46,23 @@ const ipld = require('ipld')
 The code published to npm that gets loaded on require is in fact a ES5 transpiled version with the right shims added. This means that you can require it and use with your favourite bundler without having to adjust asset management process.
 
 ```JavaScript
-var ipld = require('ipld')
+var dagCBOR = require('ipld-dag-cbor')
 ```
 
 ### Use in a browser Using a script tag
 
-Loading this module through a script tag will make the `Unixfs` obj available in the global namespace.
+Loading this module through a script tag will make the `IpldDagCbor` obj available in the global namespace.
 
 ```html
-<script src="https://unpkg.com/ipld/dist/index.min.js"></script>
+<script src="https://unpkg.com/ipld-dag-cbor/dist/index.min.js"></script>
 <!-- OR -->
-<script src="https://unpkg.com/ipld/dist/index.js"></script>
+<script src="https://unpkg.com/ipld-dag-cbor/dist/index.js"></script>
 ```
 
 ## Usage
 
-```js
-const ipld = require('ipld')
+```JavaScript
+const dagCBOR = require('ipld-dag-cbor')
 
 const file = {
   name: 'hello.txt',
@@ -70,14 +70,15 @@ const file = {
 }
 
 // CBOR encoded Buffer
-const marshalled = ipld.marshal(file)
+dagCBOR.util.serialize(file, (err, serialized) => {})
 
-console.log(ipld.multihash(marshalled))
-// => QmQtX5JVbRa25LmQ1LHFChkXWW5GaWrp7JpymN4oPuBSmL
 
-// Convert CBOR object to JavaScript object
-console.log(ipld.unmarshal(marshalled) === file)
-// => true
+ipld.util.deserialize(serialize, (err, node) => {
+  if (err) {
+    throw err
+  }
+  console.log(node)
+})
 ```
 
 ## Maintainers
