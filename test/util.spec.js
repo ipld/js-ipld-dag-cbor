@@ -15,6 +15,13 @@ describe('util', () => {
       expect(err).to.not.exist
       expect(Buffer.isBuffer(serialized)).to.be.true
 
+      // Check for the tag 42
+      expect(
+        serialized.toString('hex')
+      ).to.match(
+        // d8 = tag, 2a = 42
+        /d82a/
+      )
       dagCBOR.util.deserialize(serialized, (err, deserialized) => {
         expect(err).to.not.exist
         expect(obj).to.eql(deserialized)

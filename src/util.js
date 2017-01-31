@@ -7,17 +7,22 @@ const waterfall = require('async/waterfall')
 const setImmediate = require('async/setImmediate')
 const cloneDeep = require('lodash.clonedeep')
 const includes = require('lodash.includes')
-const defaults = require('lodash.defaults')
 const isCircular = require('is-circular')
 
 const resolver = require('./resolver')
 
-function tagCID (cid) {
-  // https://github.com/ipfs/go-ipfs/issues/3570#issuecomment-273931692
-  const CID_CBOR_TAG = 42
+// https://github.com/ipfs/go-ipfs/issues/3570#issuecomment-273931692
+const CID_CBOR_TAG = 42
 
+function tagCID (cid) {
   return new cbor.Tagged(CID_CBOR_TAG, cid)
 }
+
+const decoder = new cbor.Decoder({
+  tags: {
+    [CID_CBOR_TAG]: (val) => ({'/': val})
+  }
+})
 
 function replaceCIDbyTAG (dagNode) {
   if (isCircular(dagNode)) {
@@ -54,28 +59,6 @@ function replaceCIDbyTAG (dagNode) {
   return transform(copy)
 }
 
-function replaceTAGbyCID (dagNode) {
-  function transform (obj) {
-    Object.keys(obj).forEach((key) => {
-      const val = obj[key]
-
-      if (val instanceof cbor.Tagged) {
-        if (typeof val.value === 'string') {
-          obj[key] = { '/': val.value }
-        } else {
-          obj[key] = defaults({ '/': val.value[0] }, transform(val.value[1]))
-        }
-      } else if (typeof val === 'object') {
-        obj[key] = transform(val)
-      }
-    })
-
-    return obj
-  }
-
-  return transform(dagNode)
-}
-
 exports = module.exports
 
 exports.serialize = (dagNode, callback) => {
@@ -94,14 +77,12 @@ exports.deserialize = (data, callback) => {
   let deserialized
 
   try {
-    deserialized = cbor.decodeFirst(data)
+    deserialized = decoder.decodeFirst(data)
   } catch (err) {
     return setImmediate(() => callback(err))
   }
 
-  const dagNode = replaceTAGbyCID(deserialized)
-
-  setImmediate(() => callback(null, dagNode))
+  setImmediate(() => callback(null, deserialized))
 }
 
 exports.cid = (dagNode, callback) => {
