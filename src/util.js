@@ -5,8 +5,6 @@ const multihashing = require('multihashing-async')
 const CID = require('cids')
 const waterfall = require('async/waterfall')
 const setImmediate = require('async/setImmediate')
-const cloneDeep = require('lodash.clonedeep')
-const includes = require('lodash.includes')
 const isCircular = require('is-circular')
 
 const resolver = require('./resolver')
@@ -26,37 +24,45 @@ const decoder = new cbor.Decoder({
 
 function replaceCIDbyTAG (dagNode) {
   if (isCircular(dagNode)) {
-    throw new Error('The object passes has circular references')
+    throw new Error('The object passed has circular references')
   }
 
-  const copy = cloneDeep(dagNode)
-
   function transform (obj) {
+    if (!obj || Buffer.isBuffer(obj) || typeof obj === 'string') {
+      return obj
+    }
+
+    if (Array.isArray(obj)) {
+      return obj.map(transform)
+    }
+
     const keys = Object.keys(obj)
 
-    // Recursive transform
-    keys.forEach((key) => {
-      if (typeof obj[key] === 'object') {
-        obj[key] = transform(obj[key])
-      }
-    })
-
-    if (includes(keys, '/')) {
-      let cid = obj['/']
-
+    // only `{'/': 'link'}` are valid
+    if (keys.length === 1 && keys[0] === '/') {
       // Multiaddr encoding
       // if (typeof link === 'string' && isMultiaddr(link)) {
       //  link = new Multiaddr(link).buffer
       // }
 
-      delete obj['/'] // Remove the /
-      return tagCID(cid)
+      return tagCID(obj['/'])
+    } else if (keys.length > 0) {
+      // Recursive transform
+      let out = {}
+      keys.forEach((key) => {
+        if (typeof obj[key] === 'object') {
+          out[key] = transform(obj[key])
+        } else {
+          out[key] = obj[key]
+        }
+      })
+      return out
+    } else {
+      return obj
     }
-
-    return obj
   }
 
-  return transform(copy)
+  return transform(dagNode)
 }
 
 exports = module.exports
