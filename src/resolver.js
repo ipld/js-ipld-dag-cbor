@@ -90,8 +90,10 @@ exports.tree = (block, options, callback) => {
     if (err) {
       return callback(err)
     }
+    const flat = flattenObject(node)
+    const paths = flat.map((el) => el.path)
 
-    callback(null, flattenObject(node))
+    callback(null, paths)
   })
 }
 
