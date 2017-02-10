@@ -16,7 +16,7 @@ describe('IPLD format resolver (local)', () => {
     const emptyNode = {}
     const node = {
       name: 'I am a node',
-      someLink: { '/': 'LINK' },
+      someLink: { '/': new Buffer('LINK') },
       nest: {
         foo: {
           bar: 'baz'
@@ -71,6 +71,25 @@ describe('IPLD format resolver (local)', () => {
   })
 
   describe('node', () => {
+    it('resolver.tree', (done) => {
+      resolver.tree(nodeBlock, (err, paths) => {
+        expect(err).to.not.exist
+
+        expect(paths).to.eql([
+          'name',
+          'nest/foo/bar',
+          'array/0/a',
+          'array/1',
+          'someLink///0',
+          'someLink///1',
+          'someLink///2',
+          'someLink///3'
+        ])
+
+        done()
+      })
+    })
+
     describe('resolver.resolve', () => {
       it('path within scope', (done) => {
         resolver.resolve(nodeBlock, 'name', (err, result) => {
@@ -91,34 +110,10 @@ describe('IPLD format resolver (local)', () => {
       it('path out of scope', (done) => {
         resolver.resolve(nodeBlock, 'someLink/a/b/c', (err, result) => {
           expect(err).to.not.exist
-          expect(result.value).to.eql({ '/': 'LINK' })
+          expect(result.value).to.eql({ '/': new Buffer('LINK') })
           expect(result.remainderPath).to.equal('a/b/c')
           done()
         })
-      })
-    })
-
-    it('resolver.tree', (done) => {
-      resolver.tree(nodeBlock, (err, paths) => {
-        expect(err).to.not.exist
-        expect(paths).to.eql([{
-          path: 'name',
-          value: 'I am a node'
-        }, {
-          path: 'nest/foo/bar',
-          value: 'baz'
-        }, {
-          path: 'array/0/a',
-          value: 'b'
-        }, {
-          path: 'array/1',
-          value: 2
-        }, {
-          // TODO: confirm how to represent links in tree
-          path: 'someLink//',
-          value: 'LINK'
-        }])
-        done()
       })
     })
   })

@@ -13,12 +13,23 @@ const resolver = require('./resolver')
 const CID_CBOR_TAG = 42
 
 function tagCID (cid) {
-  return new cbor.Tagged(CID_CBOR_TAG, cid)
+  if (typeof cid === 'string') {
+    cid = new CID(cid).buffer
+  }
+
+  return new cbor.Tagged(CID_CBOR_TAG, Buffer.concat([
+    new Buffer('00', 'hex'), // thanks jdag
+    cid
+  ]))
 }
 
 const decoder = new cbor.Decoder({
   tags: {
-    [CID_CBOR_TAG]: (val) => ({'/': val})
+    [CID_CBOR_TAG]: (val) => {
+      // remove that 0
+      val = val.slice(1)
+      return {'/': val}
+    }
   }
 })
 
