@@ -1,10 +1,8 @@
 'use strict'
 
 const cbor = require('borc')
-const multihashing = require('multihashing-async')
+const multihashing = require('multihashing')
 const CID = require('cids')
-const waterfall = require('async/waterfall')
-const setImmediate = require('async/setImmediate')
 const isCircular = require('is-circular')
 
 const resolver = require('./resolver')
@@ -78,34 +76,17 @@ function replaceCIDbyTAG (dagNode) {
 
 exports = module.exports
 
-exports.serialize = (dagNode, callback) => {
-  let serialized
-
-  try {
-    const dagNodeTagged = replaceCIDbyTAG(dagNode)
-    serialized = cbor.encode(dagNodeTagged)
-  } catch (err) {
-    return setImmediate(() => callback(err))
-  }
-  setImmediate(() => callback(null, serialized))
+exports.serialize = (dagNode) => {
+  const dagNodeTagged = replaceCIDbyTAG(dagNode)
+  return cbor.encode(dagNodeTagged)
 }
 
-exports.deserialize = (data, callback) => {
-  let deserialized
-
-  try {
-    deserialized = decoder.decodeFirst(data)
-  } catch (err) {
-    return setImmediate(() => callback(err))
-  }
-
-  setImmediate(() => callback(null, deserialized))
+exports.deserialize = (data) => {
+  return decoder.decodeFirst(data)
 }
 
-exports.cid = (dagNode, callback) => {
-  waterfall([
-    (cb) => exports.serialize(dagNode, cb),
-    (serialized, cb) => multihashing(serialized, 'sha2-256', cb),
-    (mh, cb) => cb(null, new CID(1, resolver.multicodec, mh))
-  ], callback)
+exports.cid = (dagNode) => {
+  const serialized = exports.serialize(dagNode)
+  const mh = multihashing(serialized, 'sha2-256')
+  return new CID(1, resolver.multicodec, mh)
 }
