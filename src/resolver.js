@@ -72,6 +72,26 @@ exports.resolve = (block, path, callback) => {
   })
 }
 
+function flattenObject (obj, delimiter) {
+  delimiter = delimiter || '/'
+
+  if (Object.keys(obj).length === 0) {
+    return []
+  }
+
+  return traverse(obj).reduce(function (acc, x) {
+    if (typeof x === 'object' && x['/']) {
+      this.update(undefined)
+    }
+    const path = this.path.join(delimiter)
+
+    if (path !== '') {
+      acc.push({ path: path, value: x })
+    }
+    return acc
+  }, [])
+}
+
 /*
  * tree: returns a flattened array with paths: values of the project. options
  * are option (i.e. nestness)
@@ -82,9 +102,7 @@ exports.tree = (block, options, callback) => {
     options = undefined
   }
 
-  if (!options) {
-    options = {}
-  }
+  options = options || {}
 
   util.deserialize(block.data, (err, node) => {
     if (err) {
@@ -97,23 +115,20 @@ exports.tree = (block, options, callback) => {
   })
 }
 
-function flattenObject (obj, delimiter) {
-  if (!delimiter) {
-    delimiter = '/'
-  }
-
-  if (Object.keys(obj).length === 0) {
-    return []
-  }
-
-  return traverse(obj).reduce(function (acc, x) {
-    if (this.isLeaf) {
-      acc.push({
-        path: this.path.join(delimiter),
-        value: x
-      })
+exports.isLink = (block, path, callback) => {
+  exports.resolve(block, path, (err, result) => {
+    if (err) {
+      return callback(err)
     }
 
-    return acc
-  }, [])
+    if (result.remainderPath.length > 0) {
+      return callback(new Error('path out of scope'))
+    }
+
+    if (typeof result.value === 'object' && result.value['/']) {
+      callback(null, result.value)
+    } else {
+      callback(null, false)
+    }
+  })
 }

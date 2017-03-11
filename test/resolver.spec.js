@@ -7,6 +7,7 @@ const dagCBOR = require('../src')
 const resolver = dagCBOR.resolver
 const Block = require('ipfs-block')
 const series = require('async/series')
+const CID = require('cids')
 
 describe('IPLD format resolver (local)', () => {
   let emptyNodeBlock
@@ -77,15 +78,32 @@ describe('IPLD format resolver (local)', () => {
 
         expect(paths).to.eql([
           'name',
+          'nest',
+          'nest/foo',
           'nest/foo/bar',
+          'array',
+          'array/0',
           'array/0/a',
           'array/1',
-          'someLink///0',
-          'someLink///1',
-          'someLink///2',
-          'someLink///3'
+          'someLink'
         ])
 
+        done()
+      })
+    })
+
+    it('resolver.isLink with valid Link', (done) => {
+      resolver.isLink(nodeBlock, '', (err, link) => {
+        expect(err).to.not.exist
+        expect(CID.isCID(new CID(link['/']))).to.be.true
+        done()
+      })
+    })
+
+    it('resolver.isLink with invalid Link', (done) => {
+      resolver.isLink(nodeBlock, '', (err, link) => {
+        expect(err).to.not.exist
+        expect(link).to.be.false
         done()
       })
     })
