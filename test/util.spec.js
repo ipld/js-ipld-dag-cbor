@@ -22,8 +22,8 @@ describe('util', () => {
 
   it('.serialize and .deserialize', (done) => {
     dagCBOR.util.serialize(obj, (err, serialized) => {
-      expect(err).to.not.exist
-      expect(Buffer.isBuffer(serialized)).to.be.true
+      expect(err).to.not.exist // eslint-disable-line
+      expect(Buffer.isBuffer(serialized)).to.equal(true)
 
       // Check for the tag 42
       // d8 = tag, 2a = 42
@@ -32,7 +32,7 @@ describe('util', () => {
       ).to.have.length(4)
 
       dagCBOR.util.deserialize(serialized, (err, deserialized) => {
-        expect(err).to.not.exist
+        expect(err).to.not.exist // eslint-disable-line
         expect(obj).to.eql(deserialized)
         done()
       })
@@ -43,18 +43,18 @@ describe('util', () => {
     const circlarObj = {}
     circlarObj.a = circlarObj
     dagCBOR.util.serialize(circlarObj, (err, serialized) => {
-      expect(err).to.exist
-      expect(serialized).to.not.exist
+      expect(err).to.exist // eslint-disable-line
+      expect(serialized).to.not.exist // eslint-disable-line
       done()
     })
   })
 
   it('.cid', (done) => {
     dagCBOR.util.cid(obj, (err, cid) => {
-      expect(err).to.not.exist
+      expect(err).to.not.exist // eslint-disable-line
       expect(cid.version).to.equal(1)
       expect(cid.codec).to.equal('dag-cbor')
-      expect(cid.multihash).to.exist
+      expect(cid.multihash).to.exist // eslint-disable-line
       done()
     })
   })

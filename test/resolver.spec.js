@@ -32,14 +32,14 @@ describe('IPLD format resolver (local)', () => {
     series([
       (cb) => {
         dagCBOR.util.serialize(emptyNode, (err, serialized) => {
-          expect(err).to.not.exist
+          expect(err).to.not.exist // eslint-disable-line
           emptyNodeBlock = new Block(serialized)
           cb()
         })
       },
       (cb) => {
         dagCBOR.util.serialize(node, (err, serialized) => {
-          expect(err).to.not.exist
+          expect(err).to.not.exist // eslint-disable-line
           nodeBlock = new Block(serialized)
           cb()
         })
@@ -55,7 +55,7 @@ describe('IPLD format resolver (local)', () => {
     describe('resolver.resolve', () => {
       it('root', (done) => {
         resolver.resolve(emptyNodeBlock, '/', (err, result) => {
-          expect(err).to.not.exist
+          expect(err).to.not.exist // eslint-disable-line
           expect(result.value).to.be.eql({})
           done()
         })
@@ -64,7 +64,7 @@ describe('IPLD format resolver (local)', () => {
 
     it('resolver.tree', (done) => {
       resolver.tree(emptyNodeBlock, (err, paths) => {
-        expect(err).to.not.exist
+        expect(err).to.not.exist // eslint-disable-line
         expect(paths).to.eql([])
         done()
       })
@@ -74,7 +74,7 @@ describe('IPLD format resolver (local)', () => {
   describe('node', () => {
     it('resolver.tree', (done) => {
       resolver.tree(nodeBlock, (err, paths) => {
-        expect(err).to.not.exist
+        expect(err).to.not.exist // eslint-disable-line
 
         expect(paths).to.eql([
           'name',
@@ -94,16 +94,16 @@ describe('IPLD format resolver (local)', () => {
 
     it('resolver.isLink with valid Link', (done) => {
       resolver.isLink(nodeBlock, '', (err, link) => {
-        expect(err).to.not.exist
-        expect(CID.isCID(new CID(link['/']))).to.be.true
+        expect(err).to.not.exist // eslint-disable-line
+        expect(CID.isCID(new CID(link['/']))).to.equal(true)
         done()
       })
     })
 
     it('resolver.isLink with invalid Link', (done) => {
       resolver.isLink(nodeBlock, '', (err, link) => {
-        expect(err).to.not.exist
-        expect(link).to.be.false
+        expect(err).to.not.exist // eslint-disable-line
+        expect(link).to.equal(false)
         done()
       })
     })
@@ -111,7 +111,7 @@ describe('IPLD format resolver (local)', () => {
     describe('resolver.resolve', () => {
       it('path within scope', (done) => {
         resolver.resolve(nodeBlock, 'name', (err, result) => {
-          expect(err).to.not.exist
+          expect(err).to.not.exist // eslint-disable-line
           expect(result.value).to.equal('I am a node')
           done()
         })
@@ -119,7 +119,7 @@ describe('IPLD format resolver (local)', () => {
 
       it('path within scope, but nested', (done) => {
         resolver.resolve(nodeBlock, 'nest/foo/bar', (err, result) => {
-          expect(err).to.not.exist
+          expect(err).to.not.exist // eslint-disable-line
           expect(result.value).to.equal('baz')
           done()
         })
@@ -127,7 +127,7 @@ describe('IPLD format resolver (local)', () => {
 
       it('path out of scope', (done) => {
         resolver.resolve(nodeBlock, 'someLink/a/b/c', (err, result) => {
-          expect(err).to.not.exist
+          expect(err).to.not.exist // eslint-disable-line
           expect(result.value).to.eql({ '/': new Buffer('LINK') })
           expect(result.remainderPath).to.equal('a/b/c')
           done()
