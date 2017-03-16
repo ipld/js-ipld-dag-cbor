@@ -3,7 +3,10 @@
 
 'use strict'
 
-const expect = require('chai').expect
+const chai = require('chai')
+const dirtyChai = require('dirty-chai')
+const expect = chai.expect
+chai.use(dirtyChai)
 const dagCBOR = require('../src')
 const loadFixture = require('aegir/fixtures')
 const bs58 = require('bs58')
@@ -36,7 +39,7 @@ describe('dag-cbor interop tests', () => {
   describe('deserialize and compare', () => {
     it('array-link', (done) => {
       dagCBOR.util.deserialize(arrayLinkCBOR, (err, node) => {
-        expect(err).to.not.exist // eslint-disable-line
+        expect(err).to.not.exist()
         // the JSON version that gets out of go-ipfs stringifies the CID
         const bs58Str = bs58.encode(node[0]['/'])
 
@@ -47,7 +50,7 @@ describe('dag-cbor interop tests', () => {
         node[0]['/'] = bs58.decode(arrayLinkJSON[0]['/'])
 
         dagCBOR.util.cid(node, (err, cid) => {
-          expect(err).to.not.exist // eslint-disable-line
+          expect(err).to.not.exist()
           const cidStr = cid.toBaseEncodedString()
           expect(cidStr).to.eql(expectedCIDs['array-link']['/'])
           done()
@@ -57,11 +60,11 @@ describe('dag-cbor interop tests', () => {
 
     it('empty-array', (done) => {
       dagCBOR.util.deserialize(emptyArrayCBOR, (err, node) => {
-        expect(err).to.not.exist // eslint-disable-line
+        expect(err).to.not.exist()
         expect(node).to.eql(emptyArrayJSON)
 
         dagCBOR.util.cid(node, (err, cid) => {
-          expect(err).to.not.exist // eslint-disable-line
+          expect(err).to.not.exist()
           const cidStr = cid.toBaseEncodedString()
           expect(cidStr).to.eql(expectedCIDs['empty-array']['/'])
           done()
@@ -71,11 +74,11 @@ describe('dag-cbor interop tests', () => {
 
     it('empty-obj', (done) => {
       dagCBOR.util.deserialize(emptyObjCBOR, (err, node) => {
-        expect(err).to.not.exist // eslint-disable-line
+        expect(err).to.not.exist()
         expect(node).to.eql(emptyObjJSON)
 
         dagCBOR.util.cid(node, (err, cid) => {
-          expect(err).to.not.exist // eslint-disable-line
+          expect(err).to.not.exist()
           const cidStr = cid.toBaseEncodedString()
           expect(cidStr).to.eql(expectedCIDs['empty-obj']['/'])
           done()
@@ -85,11 +88,11 @@ describe('dag-cbor interop tests', () => {
 
     it.skip('foo', (done) => {
       dagCBOR.util.deserialize(fooCBOR, (err, node) => {
-        expect(err).to.not.exist // eslint-disable-line
+        expect(err).to.not.exist()
         expect(node).to.eql(fooJSON)
 
         dagCBOR.util.cid(node, (err, cid) => {
-          expect(err).to.not.exist // eslint-disable-line
+          expect(err).to.not.exist()
           const cidStr = cid.toBaseEncodedString()
           expect(cidStr).to.eql(expectedCIDs['foo']['/'])
           done()
@@ -99,11 +102,11 @@ describe('dag-cbor interop tests', () => {
 
     it('obj-no-link', (done) => {
       dagCBOR.util.deserialize(objNoLinkCBOR, (err, node) => {
-        expect(err).to.not.exist // eslint-disable-line
+        expect(err).to.not.exist()
         expect(node).to.eql(objNoLinkJSON)
 
         dagCBOR.util.cid(node, (err, cid) => {
-          expect(err).to.not.exist // eslint-disable-line
+          expect(err).to.not.exist()
           const cidStr = cid.toBaseEncodedString()
           expect(cidStr).to.eql(expectedCIDs['obj-no-link']['/'])
           done()
@@ -115,10 +118,10 @@ describe('dag-cbor interop tests', () => {
       if (!isNode) { done() }
 
       dagCBOR.util.deserialize(objWithLinkCBOR, (err, node) => {
-        expect(err).to.not.exist // eslint-disable-line
+        expect(err).to.not.exist()
 
         dagCBOR.util.cid(node, (err, cid) => {
-          expect(err).to.not.exist // eslint-disable-line
+          expect(err).to.not.exist()
           const cidStr = cid.toBaseEncodedString()
           expect(cidStr).to.eql(expectedCIDs['obj-with-link']['/'])
           done()
@@ -132,7 +135,7 @@ describe('dag-cbor interop tests', () => {
       arrayLinkJSON[0]['/'] = bs58.decode(arrayLinkJSON[0]['/'])
 
       dagCBOR.util.serialize(arrayLinkJSON, (err, serialized) => {
-        expect(err).to.not.exist // eslint-disable-line
+        expect(err).to.not.exist()
 
         expect(serialized).to.eql(arrayLinkCBOR)
         done()
@@ -141,7 +144,7 @@ describe('dag-cbor interop tests', () => {
 
     it('empty-array', (done) => {
       dagCBOR.util.serialize(emptyArrayJSON, (err, serialized) => {
-        expect(err).to.not.exist // eslint-disable-line
+        expect(err).to.not.exist()
         expect(serialized).to.eql(emptyArrayCBOR)
         done()
       })
@@ -149,7 +152,7 @@ describe('dag-cbor interop tests', () => {
 
     it('empty-obj', (done) => {
       dagCBOR.util.serialize(emptyObjJSON, (err, serialized) => {
-        expect(err).to.not.exist // eslint-disable-line
+        expect(err).to.not.exist()
         expect(serialized).to.eql(emptyObjCBOR)
         done()
       })
@@ -159,7 +162,7 @@ describe('dag-cbor interop tests', () => {
 
     it('obj-no-link', (done) => {
       dagCBOR.util.serialize(objNoLinkJSON, (err, serialized) => {
-        expect(err).to.not.exist // eslint-disable-line
+        expect(err).to.not.exist()
         expect(serialized).to.eql(objNoLinkCBOR)
         done()
       })
@@ -169,7 +172,7 @@ describe('dag-cbor interop tests', () => {
       objWithLinkJSON.foo['/'] = bs58.decode(objWithLinkJSON.foo['/'])
 
       dagCBOR.util.serialize(objWithLinkJSON, (err, serialized) => {
-        expect(err).to.not.exist // eslint-disable-line
+        expect(err).to.not.exist()
         expect(serialized).to.eql(objWithLinkCBOR)
         done()
       })
