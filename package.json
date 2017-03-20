@@ -51,7 +51,7 @@
     "deep-freeze": "0.0.1",
     "dirty-chai": "^1.2.2",
     "garbage": "0.0.0",
-    "ipfs-block": "~0.5.5",
+    "ipfs-block": "~0.6.0",
     "pre-commit": "^1.2.2"
   },
   "contributors": [
