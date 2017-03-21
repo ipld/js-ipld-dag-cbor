@@ -9,7 +9,7 @@ exports.multicodec = 'dag-cbor'
 
 /*
  * resolve: receives a path and a block and returns the value on path,
- * throw if not possible. `block` is an IPFS Block instance (contains data + key)
+ * throw if not possible. `block` is an IPFS Block instance (contains data + cid)
  */
 exports.resolve = (block, path, callback) => {
   if (typeof path === 'function') {

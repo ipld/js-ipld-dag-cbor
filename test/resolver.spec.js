@@ -6,11 +6,16 @@ const chai = require('chai')
 const dirtyChai = require('dirty-chai')
 const expect = chai.expect
 chai.use(dirtyChai)
+
+const Block = require('ipfs-block')
+const map = require('async/map')
+const waterfall = require('async/waterfall')
+const parallel = require('async/parallel')
+const CID = require('cids')
+const multihashing = require('multihashing-async')
+
 const dagCBOR = require('../src')
 const resolver = dagCBOR.resolver
-const Block = require('ipfs-block')
-const series = require('async/series')
-const CID = require('cids')
 
 describe('IPLD format resolver (local)', () => {
   let emptyNodeBlock
@@ -32,20 +37,21 @@ describe('IPLD format resolver (local)', () => {
       ]
     }
 
-    series([
-      (cb) => {
-        dagCBOR.util.serialize(emptyNode, (err, serialized) => {
+    waterfall([
+      (cb) => parallel([
+        (cb) => dagCBOR.util.serialize(emptyNode, cb),
+        (cb) => dagCBOR.util.serialize(node, cb)
+      ], cb),
+      (res, cb) => map(res, (s, cb) => {
+        multihashing(s, 'sha2-256', (err, multihash) => {
           expect(err).to.not.exist()
-          emptyNodeBlock = new Block(serialized)
-          cb()
+          cb(null, new Block(s, new CID(multihash)))
         })
-      },
-      (cb) => {
-        dagCBOR.util.serialize(node, (err, serialized) => {
-          expect(err).to.not.exist()
-          nodeBlock = new Block(serialized)
-          cb()
-        })
+      }, cb),
+      (blocks, cb) => {
+        emptyNodeBlock = blocks[0]
+        nodeBlock = blocks[1]
+        cb()
       }
     ], done)
   })
