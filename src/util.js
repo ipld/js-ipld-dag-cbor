@@ -34,7 +34,13 @@ const decoder = new cbor.Decoder({
 })
 
 function replaceCIDbyTAG (dagNode) {
-  if (isCircular(dagNode)) {
+  let circular
+  try {
+    circular = isCircular(dagNode)
+  } catch (e) {
+    circular = false
+  }
+  if (circular) {
     throw new Error('The object passed has circular references')
   }
 
