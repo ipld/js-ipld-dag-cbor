@@ -62,6 +62,16 @@ describe('util', () => {
     })
   })
 
+  it('strings', (done) => {
+    dagCBOR.util.cid('some test string', (err, cid) => {
+      expect(err).to.not.exist()
+      expect(cid.version).to.equal(1)
+      expect(cid.codec).to.equal('dag-cbor')
+      expect(cid.multihash).to.exist()
+      done()
+    })
+  })
+
   it.skip('serialize and deserialize - garbage', (done) => {
     const inputs = []
 
