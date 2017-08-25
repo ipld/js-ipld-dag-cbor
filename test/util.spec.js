@@ -6,7 +6,6 @@ const dirtyChai = require('dirty-chai')
 const expect = chai.expect
 chai.use(dirtyChai)
 const garbage = require('garbage')
-const Buffer = require('safe-buffer').Buffer
 const map = require('async/map')
 const dagCBOR = require('../src')
 

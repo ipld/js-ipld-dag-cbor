@@ -53,8 +53,7 @@
     "dirty-chai": "^2.0.1",
     "garbage": "0.0.0",
     "ipfs-block": "~0.6.0",
-    "pre-commit": "^1.2.2",
-    "safe-buffer": "^5.1.1"
+    "pre-commit": "^1.2.2"
   },
   "contributors": [
     "David Dias <daviddias.p@gmail.com>",
