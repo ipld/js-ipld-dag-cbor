@@ -12,6 +12,7 @@ const map = require('async/map')
 const waterfall = require('async/waterfall')
 const parallel = require('async/parallel')
 const CID = require('cids')
+const Buffer = require('safe-buffer').Buffer
 const multihashing = require('multihashing-async')
 
 const dagCBOR = require('../src')
@@ -25,7 +26,9 @@ describe('IPLD format resolver (local)', () => {
     const emptyNode = {}
     const node = {
       name: 'I am a node',
-      someLink: { '/': new Buffer('LINK') },
+      someLink: {
+        '/': 'QmaNh5d3hFiqJAGjHmvxihSnWDGqYZCn7H2XHpbttYjCNE'
+      },
       nest: {
         foo: {
           bar: 'baz'
@@ -102,9 +105,10 @@ describe('IPLD format resolver (local)', () => {
     })
 
     it('resolver.isLink with valid Link', (done) => {
-      resolver.isLink(nodeBlock, '', (err, link) => {
+      resolver.isLink(nodeBlock, 'someLink', (err, link) => {
         expect(err).to.not.exist()
-        expect(CID.isCID(new CID(link['/']))).to.equal(true)
+        const linkCID = new CID(link['/'])
+        expect(CID.isCID(linkCID)).to.equal(true)
         done()
       })
     })
@@ -137,7 +141,9 @@ describe('IPLD format resolver (local)', () => {
       it('path out of scope', (done) => {
         resolver.resolve(nodeBlock, 'someLink/a/b/c', (err, result) => {
           expect(err).to.not.exist()
-          expect(result.value).to.eql({ '/': new Buffer('LINK') })
+          expect(result.value).to.eql({
+            '/': new CID('QmaNh5d3hFiqJAGjHmvxihSnWDGqYZCn7H2XHpbttYjCNE').buffer
+          })
           expect(result.remainderPath).to.equal('a/b/c')
           done()
         })
