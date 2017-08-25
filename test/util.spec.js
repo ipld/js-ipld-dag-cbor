@@ -6,20 +6,21 @@ const dirtyChai = require('dirty-chai')
 const expect = chai.expect
 chai.use(dirtyChai)
 const garbage = require('garbage')
+const Buffer = require('safe-buffer').Buffer
 const map = require('async/map')
 const dagCBOR = require('../src')
 
 describe('util', () => {
   const obj = {
     someKey: 'someValue',
-    link: { '/': new Buffer('aaaaa') },
+    link: { '/': Buffer.from('aaaaa') },
     links: [
-      { '/': new Buffer('1a') },
-      { '/': new Buffer('2b') }
+      { '/': Buffer.from('1a') },
+      { '/': Buffer.from('2b') }
     ],
     nested: {
       hello: 'world',
-      link: { '/': new Buffer('mylink') }
+      link: { '/': Buffer.from('mylink') }
     }
   }
 

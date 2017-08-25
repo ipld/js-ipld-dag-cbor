@@ -6,6 +6,7 @@ const CID = require('cids')
 const waterfall = require('async/waterfall')
 const setImmediate = require('async/setImmediate')
 const isCircular = require('is-circular')
+const Buffer = require('safe-buffer').Buffer
 
 const resolver = require('./resolver')
 
@@ -18,7 +19,7 @@ function tagCID (cid) {
   }
 
   return new cbor.Tagged(CID_CBOR_TAG, Buffer.concat([
-    new Buffer('00', 'hex'), // thanks jdag
+    Buffer.from('00', 'hex'), // thanks jdag
     cid
   ]))
 }

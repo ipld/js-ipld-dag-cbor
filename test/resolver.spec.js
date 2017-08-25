@@ -12,7 +12,6 @@ const map = require('async/map')
 const waterfall = require('async/waterfall')
 const parallel = require('async/parallel')
 const CID = require('cids')
-const Buffer = require('safe-buffer').Buffer
 const multihashing = require('multihashing-async')
 
 const dagCBOR = require('../src')
