@@ -18,7 +18,7 @@ function tagCID (cid) {
   }
 
   return new cbor.Tagged(CID_CBOR_TAG, Buffer.concat([
-    new Buffer('00', 'hex'), // thanks jdag
+    Buffer.from('00', 'hex'), // thanks jdag
     cid
   ]))
 }

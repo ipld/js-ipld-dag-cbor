@@ -12,14 +12,14 @@ const dagCBOR = require('../src')
 describe('util', () => {
   const obj = {
     someKey: 'someValue',
-    link: { '/': new Buffer('aaaaa') },
+    link: { '/': Buffer.from('aaaaa') },
     links: [
-      { '/': new Buffer('1a') },
-      { '/': new Buffer('2b') }
+      { '/': Buffer.from('1a') },
+      { '/': Buffer.from('2b') }
     ],
     nested: {
       hello: 'world',
-      link: { '/': new Buffer('mylink') }
+      link: { '/': Buffer.from('mylink') }
     }
   }
 
