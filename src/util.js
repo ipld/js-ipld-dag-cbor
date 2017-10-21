@@ -62,7 +62,7 @@ function replaceCIDbyTAG (dagNode) {
       //  link = new Multiaddr(link).buffer
       // }
 
-      return tagCID(obj['/'])
+      return tagCID(obj['/'].replace(/^(\/ipfs\/)/, ''))
     } else if (keys.length > 0) {
       // Recursive transform
       let out = {}
