@@ -37,7 +37,7 @@
   },
   "homepage": "https://github.com/ipld/js-ipld-dag-cbor",
   "dependencies": {
-    "async": "^2.5.0",
+    "async": "^2.6.0",
     "borc": "^2.0.2",
     "bs58": "^4.0.1",
     "cids": "~0.5.2",
