@@ -6,7 +6,7 @@
   "scripts": {
     "test": "aegir test",
     "test:browser": "aegir test --target browser",
-    "test:node": "aegir-test --target node",
+    "test:node": "aegir test --target node",
     "lint": "aegir lint",
     "release": "aegir release",
     "release-minor": "aegir release --type minor",
