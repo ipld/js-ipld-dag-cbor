@@ -8,16 +8,16 @@ exports = module.exports
 exports.multicodec = 'dag-cbor'
 
 /*
- * resolve: receives a path and a block and returns the value on path,
- * throw if not possible. `block` is an IPFS Block instance (contains data + cid)
+ * resolve: receives a path and a binary blob and returns the value on path,
+ * throw if not possible. `binaryBlob` is CBOR encoded data.
  */
-exports.resolve = (block, path, callback) => {
+exports.resolve = (binaryBlob, path, callback) => {
   if (typeof path === 'function') {
     callback = path
     path = undefined
   }
 
-  util.deserialize(block.data, (err, node) => {
+  util.deserialize(binaryBlob, (err, node) => {
     if (err) {
       return callback(err)
     }
@@ -95,7 +95,7 @@ function flattenObject (obj, delimiter) {
  * tree: returns a flattened array with paths: values of the project. options
  * are option (i.e. nestness)
  */
-exports.tree = (block, options, callback) => {
+exports.tree = (binaryBlob, options, callback) => {
   if (typeof options === 'function') {
     callback = options
     options = undefined
@@ -103,7 +103,7 @@ exports.tree = (block, options, callback) => {
 
   options = options || {}
 
-  util.deserialize(block.data, (err, node) => {
+  util.deserialize(binaryBlob, (err, node) => {
     if (err) {
       return callback(err)
     }
@@ -114,8 +114,8 @@ exports.tree = (block, options, callback) => {
   })
 }
 
-exports.isLink = (block, path, callback) => {
-  exports.resolve(block, path, (err, result) => {
+exports.isLink = (binaryBlob, path, callback) => {
+  exports.resolve(binaryBlob, path, (err, result) => {
     if (err) {
       return callback(err)
     }

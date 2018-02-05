@@ -51,8 +51,7 @@
     "chai": "^4.1.2",
     "deep-freeze": "0.0.1",
     "dirty-chai": "^2.0.1",
-    "garbage": "0.0.0",
-    "ipfs-block": "~0.6.1"
+    "garbage": "0.0.0"
   },
   "contributors": [
     "David Dias <daviddias.p@gmail.com>",
