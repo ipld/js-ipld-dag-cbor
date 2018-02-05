@@ -33,7 +33,6 @@ exports.resolve = (block, path, callback) => {
 
     // within scope
 
-    // const tree = exports.tree(block)
     const parts = path.split('/')
     const val = traverse(node).get(parts)
 
