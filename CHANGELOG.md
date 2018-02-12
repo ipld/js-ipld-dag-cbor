@@ -1,3 +1,27 @@
+<a name="0.12.0"></a>
+# [0.12.0](https://github.com/ipld/js-ipld-dag-cbor/compare/v0.11.2...v0.12.0) (2018-02-12)
+
+
+### Bug Fixes
+
+* use binary blobs directly ([5321d6a](https://github.com/ipld/js-ipld-dag-cbor/commit/5321d6a))
+
+
+### BREAKING CHANGES
+
+* Everyone calling the functions of `resolve` need to
+pass in the binary data instead of an IPFS block.
+
+So if your input is an IPFS block, the code changes from
+
+    resolver.resolve(block, path, (err, result) => {…}
+
+to
+
+    resolver.resolve(block.data, path, (err, result) => {…}
+
+
+
 <a name="0.11.2"></a>
 ## [0.11.2](https://github.com/ipld/js-ipld-dag-cbor/compare/v0.11.1...v0.11.2) (2017-11-07)
 
