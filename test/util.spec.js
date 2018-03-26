@@ -3,6 +3,7 @@
 
 const chai = require('chai')
 const dirtyChai = require('dirty-chai')
+const multihash = require('multihashes')
 const expect = chai.expect
 chai.use(dirtyChai)
 const garbage = require('garbage')
@@ -53,21 +54,21 @@ describe('util', () => {
   })
 
   it('.cid', (done) => {
-    dagCBOR.util.cid(obj, (err, cid) => {
+    dagCBOR.util.cid(obj, 'sha2-256', (err, cid) => {
       expect(err).to.not.exist()
       expect(cid.version).to.equal(1)
       expect(cid.codec).to.equal('dag-cbor')
-      expect(cid.multihash).to.exist()
+      expect(multihash.decode(cid.multihash).name).to.equal('sha2-256')
       done()
     })
   })
 
-  it('strings', (done) => {
-    dagCBOR.util.cid('some test string', (err, cid) => {
+  it.only('strings', (done) => {
+    dagCBOR.util.cid('some test string', 'sha2-256', (err, cid) => {
       expect(err).to.not.exist()
       expect(cid.version).to.equal(1)
       expect(cid.codec).to.equal('dag-cbor')
-      expect(cid.multihash).to.exist()
+      expect(multihash.decode(cid.multihash).name).to.equal('sha2-256')
       done()
     })
   })
