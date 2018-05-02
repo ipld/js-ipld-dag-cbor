@@ -2,6 +2,7 @@
   "name": "ipld-dag-cbor",
   "version": "0.12.0",
   "description": "JavaScript implementation of the IPLD (InterpPlanetary Linked Data)",
+  "leadMaintainer": "Volker Mische <volker.mische@gmail.com>",
   "main": "src/index.js",
   "scripts": {
     "test": "aegir test",
@@ -26,7 +27,6 @@
   "keywords": [
     "IPFS"
   ],
-  "author": "David Dias <daviddias@ipfs.io>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/ipld/js-ipld-dag-cbor/issues"
