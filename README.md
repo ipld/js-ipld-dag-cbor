@@ -103,8 +103,6 @@ dagCBOR.util.serialize(test, (err, serialized) => {
 })
 ```
 
-
-
 ## Contribute
 
 Feel free to join in. All welcome. Open an [issue](https://github.com/ipld/js-ipld-dag-cbor/issues)!
