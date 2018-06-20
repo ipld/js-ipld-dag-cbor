@@ -83,6 +83,28 @@ ipld.util.deserialize(serialize, (err, node) => {
 })
 ```
 
+## Links
+
+You can link to other IPLD data by using values of an object with a single "/" attribute set to the CID string.
+
+```JavaScript
+const dagCBOR = require('ipld-dag-cbor')
+
+const test = {
+  foo: {
+    '/': 'QmRgutAxd8t7oGkSm4wmeuByG6M51wcTso6cubDdQtuEfL' // CID of dag-pb node
+  }
+}
+
+dagCBOR.util.serialize(test, (err, serialized) => {
+  dagCBOR.resolver.isLink(serialized, 'foo', (err, obj) => {
+    console.log(obj) // {'/': Buffer([contains cid])}
+  })
+})
+```
+
+
+
 ## Contribute
 
 Feel free to join in. All welcome. Open an [issue](https://github.com/ipld/js-ipld-dag-cbor/issues)!
