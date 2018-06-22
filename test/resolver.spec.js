@@ -56,7 +56,7 @@ describe('IPLD format resolver (local)', () => {
   it('defaultHashAlg is sha2-256', () => {
     expect(resolver.defaultHashAlg).to.equal('sha2-256')
   })
-    
+
   describe('empty node', () => {
     describe('resolver.resolve', () => {
       it('root', (done) => {
