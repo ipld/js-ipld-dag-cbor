@@ -6,6 +6,7 @@ const traverse = require('traverse')
 exports = module.exports
 
 exports.multicodec = 'dag-cbor'
+exports.defaultHashAlg = 'sha2-256'
 
 /*
  * resolve: receives a path and a binary blob and returns the value on path,

@@ -111,7 +111,7 @@ exports.deserialize = (data, callback) => {
 exports.cid = (dagNode, callback) => {
   waterfall([
     (cb) => exports.serialize(dagNode, cb),
-    (serialized, cb) => multihashing(serialized, 'sha2-256', cb),
+    (serialized, cb) => multihashing(serialized, resolver.defaultHashAlg, cb),
     (mh, cb) => cb(null, new CID(1, resolver.multicodec, mh))
   ], callback)
 }
