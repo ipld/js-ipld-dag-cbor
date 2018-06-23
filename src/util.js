@@ -125,8 +125,8 @@ exports.deserialize = (data, callback) => {
  */
 exports.cid = (dagNode, options, callback) => {
   if (options instanceof Function) {
-      callback = options
-      options = {}
+    callback = options
+    options = {}
   }
   options = options || {}
   const hashAlg = options.hashAlg || resolver.defaultHashAlg
