@@ -8,6 +8,7 @@ chai.use(dirtyChai)
 const garbage = require('garbage')
 const map = require('async/map')
 const dagCBOR = require('../src')
+const multihash = require('multihashes')
 
 describe('util', () => {
   const obj = {
@@ -58,6 +59,20 @@ describe('util', () => {
       expect(cid.version).to.equal(1)
       expect(cid.codec).to.equal('dag-cbor')
       expect(cid.multihash).to.exist()
+      const mh = multihash.decode(cid.multihash)
+      expect(mh.name).to.equal('sha2-256')
+      done()
+    })
+  })
+
+  it('.cid with hashAlg', (done) => {
+    dagCBOR.util.cid(obj, { hashAlg: 'sha2-512' }, (err, cid) => {
+      expect(err).to.not.exist()
+      expect(cid.version).to.equal(1)
+      expect(cid.codec).to.equal('dag-cbor')
+      expect(cid.multihash).to.exist()
+      const mh = multihash.decode(cid.multihash)
+      expect(mh.name).to.equal('sha2-512')
       done()
     })
   })
