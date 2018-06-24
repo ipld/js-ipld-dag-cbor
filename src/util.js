@@ -124,13 +124,13 @@ exports.deserialize = (data, callback) => {
  * @returns {void}
  */
 exports.cid = (dagNode, options, callback) => {
-  if (options instanceof Function) {
+  if (typeof options === 'function') {
     callback = options
     options = {}
   }
   options = options || {}
   const hashAlg = options.hashAlg || resolver.defaultHashAlg
-  const version = options.version || 1
+  const version = typeof options.version === 'undefined' ? 1 : options.version
   waterfall([
     (cb) => exports.serialize(dagNode, cb),
     (serialized, cb) => multihashing(serialized, hashAlg, cb),
