@@ -117,7 +117,7 @@ exports.deserialize = (data, callback) => {
 /**
  * Get the CID of the DAG-Node.
  *
- * @param {Buffer} blob - Output from serialize()
+ * @param {Buffer} blob - Serialized binary data
  * @param {Object} [options] - Options to create the CID
  * @param {number} [options.version=1] - CID version number
  * @param {string} [options.hashAlg] - Defaults to hashAlg for the resolver
