@@ -49,7 +49,7 @@ describe('dag-cbor interop tests', () => {
         // put it back to bytes
         node[0]['/'] = bs58.decode(arrayLinkJSON[0]['/'])
 
-        dagCBOR.util.cid(node, (err, cid) => {
+        dagCBOR.util.cid(arrayLinkCBOR, (err, cid) => {
           expect(err).to.not.exist()
           const cidStr = cid.toBaseEncodedString()
           expect(cidStr).to.eql(expectedCIDs['array-link']['/'])
@@ -63,7 +63,7 @@ describe('dag-cbor interop tests', () => {
         expect(err).to.not.exist()
         expect(node).to.eql(emptyArrayJSON)
 
-        dagCBOR.util.cid(node, (err, cid) => {
+        dagCBOR.util.cid(emptyArrayCBOR, (err, cid) => {
           expect(err).to.not.exist()
           const cidStr = cid.toBaseEncodedString()
           expect(cidStr).to.eql(expectedCIDs['empty-array']['/'])
@@ -77,7 +77,7 @@ describe('dag-cbor interop tests', () => {
         expect(err).to.not.exist()
         expect(node).to.eql(emptyObjJSON)
 
-        dagCBOR.util.cid(node, (err, cid) => {
+        dagCBOR.util.cid(emptyObjCBOR, (err, cid) => {
           expect(err).to.not.exist()
           const cidStr = cid.toBaseEncodedString()
           expect(cidStr).to.eql(expectedCIDs['empty-obj']['/'])
@@ -105,7 +105,7 @@ describe('dag-cbor interop tests', () => {
         expect(err).to.not.exist()
         expect(node).to.eql(objNoLinkJSON)
 
-        dagCBOR.util.cid(node, (err, cid) => {
+        dagCBOR.util.cid(objNoLinkCBOR, (err, cid) => {
           expect(err).to.not.exist()
           const cidStr = cid.toBaseEncodedString()
           expect(cidStr).to.eql(expectedCIDs['obj-no-link']['/'])
@@ -120,7 +120,7 @@ describe('dag-cbor interop tests', () => {
       dagCBOR.util.deserialize(objWithLinkCBOR, (err, node) => {
         expect(err).to.not.exist()
 
-        dagCBOR.util.cid(node, (err, cid) => {
+        dagCBOR.util.cid(objWithLinkCBOR, (err, cid) => {
           expect(err).to.not.exist()
           const cidStr = cid.toBaseEncodedString()
           expect(cidStr).to.eql(expectedCIDs['obj-with-link']['/'])
