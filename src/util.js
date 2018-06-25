@@ -108,10 +108,32 @@ exports.deserialize = (data, callback) => {
   setImmediate(() => callback(null, deserialized))
 }
 
-exports.cid = (dagNode, callback) => {
+/**
+ * @callback CidCallback
+ * @param {?Error} error - Error if getting the CID failed
+ * @param {?CID} cid - CID if call was successful
+ */
+/**
+ * Get the CID of the DAG-Node.
+ *
+ * @param {Object} dagNode - Internal representation
+ * @param {Object} [options] - Options to create the CID
+ * @param {number} [options.version=1] - CID version number
+ * @param {string} [options.hashAlg] - Defaults to hashAlg for the resolver
+ * @param {CidCallback} callback - Callback that handles the return value
+ * @returns {void}
+ */
+exports.cid = (dagNode, options, callback) => {
+  if (typeof options === 'function') {
+    callback = options
+    options = {}
+  }
+  options = options || {}
+  const hashAlg = options.hashAlg || resolver.defaultHashAlg
+  const version = typeof options.version === 'undefined' ? 1 : options.version
   waterfall([
     (cb) => exports.serialize(dagNode, cb),
-    (serialized, cb) => multihashing(serialized, resolver.defaultHashAlg, cb),
-    (mh, cb) => cb(null, new CID(1, resolver.multicodec, mh))
+    (serialized, cb) => multihashing(serialized, hashAlg, cb),
+    (mh, cb) => cb(null, new CID(version, resolver.multicodec, mh))
   ], callback)
 }
