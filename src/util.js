@@ -115,9 +115,9 @@ exports.deserialize = (data, callback) => {
  * @param {?CID} cid - CID if call was successful
  */
 /**
- * Get the CID of the DAG-Node.
+ * Get the CID of the serialized CBOR node.
  *
- * @param {Buffer} blob - Serialized binary data
+ * @param {Buffer} blob - Serialized CBOR node
  * @param {Object} [options] - Options to create the CID
  * @param {number} [options.version=1] - CID version number
  * @param {string} [options.hashAlg] - Defaults to hashAlg for the resolver
