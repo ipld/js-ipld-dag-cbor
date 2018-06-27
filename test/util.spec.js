@@ -54,32 +54,36 @@ describe('util', () => {
   })
 
   it('.cid', (done) => {
-    dagCBOR.util.serialize(obj, (err, serialized) => {
+    dagCBOR.util.cid(obj, (err, cid) => {
       expect(err).to.not.exist()
-      dagCBOR.util.cid(serialized, (err, cid) => {
-        expect(err).to.not.exist()
-        expect(cid.version).to.equal(1)
-        expect(cid.codec).to.equal('dag-cbor')
-        expect(cid.multihash).to.exist()
-        const mh = multihash.decode(cid.multihash)
-        expect(mh.name).to.equal('sha2-256')
-        done()
-      })
+      expect(cid.version).to.equal(1)
+      expect(cid.codec).to.equal('dag-cbor')
+      expect(cid.multihash).to.exist()
+      const mh = multihash.decode(cid.multihash)
+      expect(mh.name).to.equal('sha2-256')
+      done()
     })
   })
 
   it('.cid with hashAlg', (done) => {
-    dagCBOR.util.serialize(obj, (err, serialized) => {
+    dagCBOR.util.cid(obj, { hashAlg: 'sha2-512' }, (err, cid) => {
       expect(err).to.not.exist()
-      dagCBOR.util.cid(serialized, { hashAlg: 'sha2-512' }, (err, cid) => {
-        expect(err).to.not.exist()
-        expect(cid.version).to.equal(1)
-        expect(cid.codec).to.equal('dag-cbor')
-        expect(cid.multihash).to.exist()
-        const mh = multihash.decode(cid.multihash)
-        expect(mh.name).to.equal('sha2-512')
-        done()
-      })
+      expect(cid.version).to.equal(1)
+      expect(cid.codec).to.equal('dag-cbor')
+      expect(cid.multihash).to.exist()
+      const mh = multihash.decode(cid.multihash)
+      expect(mh.name).to.equal('sha2-512')
+      done()
+    })
+  })
+
+  it('strings', (done) => {
+    dagCBOR.util.cid('some test string', (err, cid) => {
+      expect(err).to.not.exist()
+      expect(cid.version).to.equal(1)
+      expect(cid.codec).to.equal('dag-cbor')
+      expect(cid.multihash).to.exist()
+      done()
     })
   })
 

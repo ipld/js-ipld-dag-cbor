@@ -1,6 +1,5 @@
 'use strict'
 
-const assert = require('assert')
 const cbor = require('borc')
 const multihashing = require('multihashing-async')
 const CID = require('cids')
@@ -117,15 +116,14 @@ exports.deserialize = (data, callback) => {
 /**
  * Get the CID of the DAG-Node.
  *
- * @param {Buffer} blob - Serialized binary data
+ * @param {Object} dagNode - Internal representation
  * @param {Object} [options] - Options to create the CID
  * @param {number} [options.version=1] - CID version number
  * @param {string} [options.hashAlg] - Defaults to hashAlg for the resolver
  * @param {CidCallback} callback - Callback that handles the return value
  * @returns {void}
  */
-exports.cid = (blob, options, callback) => {
-  assert(Buffer.isBuffer(blob), 'blob must be a Buffer')
+exports.cid = (dagNode, options, callback) => {
   if (typeof options === 'function') {
     callback = options
     options = {}
@@ -134,7 +132,8 @@ exports.cid = (blob, options, callback) => {
   const hashAlg = options.hashAlg || resolver.defaultHashAlg
   const version = typeof options.version === 'undefined' ? 1 : options.version
   waterfall([
-    (cb) => multihashing(blob, hashAlg, cb),
+    (cb) => exports.serialize(dagNode, cb),
+    (serialized, cb) => multihashing(serialized, hashAlg, cb),
     (mh, cb) => cb(null, new CID(version, resolver.multicodec, mh))
   ], callback)
 }
