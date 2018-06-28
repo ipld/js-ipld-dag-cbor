@@ -12,22 +12,22 @@ const loadFixture = require('aegir/fixtures')
 const bs58 = require('bs58')
 const isNode = require('detect-node')
 
-const arrayLinkCBOR = loadFixture(__dirname, '/fixtures/array-link.cbor')
+const arrayLinkCBOR = loadFixture('test/fixtures/array-link.cbor')
 const arrayLinkJSON = require('./fixtures/array-link.json')
 
-const emptyArrayCBOR = loadFixture(__dirname, '/fixtures/empty-array.cbor')
+const emptyArrayCBOR = loadFixture('test/fixtures/empty-array.cbor')
 const emptyArrayJSON = require('./fixtures/empty-array.json')
 
-const emptyObjCBOR = loadFixture(__dirname, '/fixtures/empty-obj.cbor')
+const emptyObjCBOR = loadFixture('test/fixtures/empty-obj.cbor')
 const emptyObjJSON = require('./fixtures/empty-obj.json')
 
-const fooCBOR = loadFixture(__dirname, '/fixtures/foo.cbor')
+const fooCBOR = loadFixture('test/fixtures/foo.cbor')
 const fooJSON = require('./fixtures/foo.json')
 
-const objNoLinkCBOR = loadFixture(__dirname, '/fixtures/obj-no-link.cbor')
+const objNoLinkCBOR = loadFixture('test/fixtures/obj-no-link.cbor')
 const objNoLinkJSON = require('./fixtures/obj-no-link.json')
 
-const objWithLinkCBOR = loadFixture(__dirname, '/fixtures/obj-with-link.cbor')
+const objWithLinkCBOR = loadFixture('test/fixtures/obj-with-link.cbor')
 const objWithLinkJSON = require('./fixtures/obj-with-link.json')
 
 const expectedCIDs = require('./fixtures/expected.json')
