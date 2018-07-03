@@ -30,7 +30,8 @@ const decoder = new cbor.Decoder({
       val = val.slice(1)
       return {'/': val}
     }
-  }
+  },
+  size: 1e+6 /* one megabyte */
 })
 
 function replaceCIDbyTAG (dagNode) {
