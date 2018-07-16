@@ -47,7 +47,7 @@
     "traverse": "~0.6.6"
   },
   "devDependencies": {
-    "aegir": "^14.0.0",
+    "aegir": "^15.0.0",
     "chai": "^4.1.2",
     "deep-freeze": "0.0.1",
     "dirty-chai": "^2.0.1",
