@@ -9,18 +9,19 @@ const garbage = require('garbage')
 const map = require('async/map')
 const dagCBOR = require('../src')
 const multihash = require('multihashes')
+const CID = require('cids')
 
 describe('util', () => {
   const obj = {
     someKey: 'someValue',
-    link: { '/': Buffer.from('aaaaa') },
+    link: new CID('QmRgutAxd8t7oGkSm4wmeuByG6M51wcTso6cubDdQtuEfL'),
     links: [
-      { '/': Buffer.from('1a') },
-      { '/': Buffer.from('2b') }
+      new CID('QmRgutAxd8t7oGkSm4wmeuByG6M51wcTso6cubDdQtuEfL'),
+      new CID('QmRgutAxd8t7oGkSm4wmeuByG6M51wcTso6cubDdQtuEfL')
     ],
     nested: {
       hello: 'world',
-      link: { '/': Buffer.from('mylink') }
+      link: new CID('QmRgutAxd8t7oGkSm4wmeuByG6M51wcTso6cubDdQtuEfL')
     }
   }
 

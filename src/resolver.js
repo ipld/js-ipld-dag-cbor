@@ -2,6 +2,7 @@
 
 const util = require('./util')
 const traverse = require('traverse')
+const CID = require('cids')
 
 exports = module.exports
 
@@ -80,7 +81,7 @@ function flattenObject (obj, delimiter) {
   }
 
   return traverse(obj).reduce(function (acc, x) {
-    if (typeof x === 'object' && x['/']) {
+    if (CID.isCID(x)) {
       this.update(undefined)
     }
     const path = this.path.join(delimiter)
@@ -125,7 +126,7 @@ exports.isLink = (binaryBlob, path, callback) => {
       return callback(new Error('path out of scope'))
     }
 
-    if (typeof result.value === 'object' && result.value['/']) {
+    if (CID.isCID(result.value)) {
       callback(null, result.value)
     } else {
       callback(null, false)

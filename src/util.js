@@ -15,6 +15,8 @@ const CID_CBOR_TAG = 42
 function tagCID (cid) {
   if (typeof cid === 'string') {
     cid = new CID(cid).buffer
+  } else if (CID.isCID(cid)) {
+    cid = cid.buffer
   }
 
   return new cbor.Tagged(CID_CBOR_TAG, Buffer.concat([
@@ -28,7 +30,7 @@ const decoder = new cbor.Decoder({
     [CID_CBOR_TAG]: (val) => {
       // remove that 0
       val = val.slice(1)
-      return {'/': val}
+      return new CID(val)
     }
   }
 })
@@ -53,9 +55,12 @@ function replaceCIDbyTAG (dagNode) {
       return obj.map(transform)
     }
 
+    if (CID.isCID(obj)) {
+      return tagCID(obj)
+    }
+
     const keys = Object.keys(obj)
 
-    // only `{'/': 'link'}` are valid
     if (keys.length === 1 && keys[0] === '/') {
       // Multiaddr encoding
       // if (typeof link === 'string' && isMultiaddr(link)) {
