@@ -11,9 +11,11 @@ const dagCBOR = require('../src')
 const loadFixture = require('aegir/fixtures')
 const bs58 = require('bs58')
 const isNode = require('detect-node')
+const CID = require('cids')
 
 const arrayLinkCBOR = loadFixture('test/fixtures/array-link.cbor')
 const arrayLinkJSON = require('./fixtures/array-link.json')
+const arrayLink = arrayLinkJSON.map(x => new CID(x['/']))
 
 const emptyArrayCBOR = loadFixture('test/fixtures/empty-array.cbor')
 const emptyArrayJSON = require('./fixtures/empty-array.json')
@@ -41,13 +43,9 @@ describe('dag-cbor interop tests', () => {
       dagCBOR.util.deserialize(arrayLinkCBOR, (err, node) => {
         expect(err).to.not.exist()
         // the JSON version that gets out of go-ipfs stringifies the CID
-        const bs58Str = bs58.encode(node[0]['/'])
+        const bs58Str = node[0].toBaseEncodedString()
 
-        node[0]['/'] = bs58Str
-        expect(node).to.eql(arrayLinkJSON)
-
-        // put it back to bytes
-        node[0]['/'] = bs58.decode(arrayLinkJSON[0]['/'])
+        expect(bs58Str).to.eql(arrayLink[0].toBaseEncodedString())
 
         dagCBOR.util.cid(node, (err, cid) => {
           expect(err).to.not.exist()
@@ -94,7 +92,7 @@ describe('dag-cbor interop tests', () => {
         dagCBOR.util.cid(node, (err, cid) => {
           expect(err).to.not.exist()
           const cidStr = cid.toBaseEncodedString()
-          expect(cidStr).to.eql(expectedCIDs['foo']['/'])
+          expect(cidStr).to.eql(expectedCIDs.foo['/'])
           done()
         })
       })
