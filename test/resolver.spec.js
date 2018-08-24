@@ -9,6 +9,7 @@ chai.use(dirtyChai)
 
 const waterfall = require('async/waterfall')
 const parallel = require('async/parallel')
+const each = require('async/each')
 const CID = require('cids')
 
 const dagCBOR = require('../src')
@@ -129,6 +130,27 @@ describe('IPLD format resolver (local)', () => {
           expect(err).to.not.exist()
           expect(result.value).to.equal('baz')
           done()
+        })
+      })
+
+      it('should resolve falsy values for path within scope', (done) => {
+        const node = {
+          nu11: null,
+          f4lse: false,
+          empty: '',
+          zero: 0
+        }
+
+        dagCBOR.util.serialize(node, (err, nodeBlob) => {
+          expect(err).to.not.exist()
+
+          each(Object.keys(node), (key, cb) => {
+            resolver.resolve(nodeBlob, key, (err, result) => {
+              expect(err).to.not.exist()
+              expect(result.value).to.equal(node[key])
+              cb()
+            })
+          }, done)
         })
       })
 
