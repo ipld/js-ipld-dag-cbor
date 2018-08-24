@@ -37,7 +37,7 @@ exports.resolve = (binaryBlob, path, callback) => {
     const parts = path.split('/')
     const val = traverse(node).get(parts)
 
-    if (val) {
+    if (val !== undefined) {
       return callback(null, {
         value: val,
         remainderPath: ''
