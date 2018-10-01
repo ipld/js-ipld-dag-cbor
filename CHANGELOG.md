@@ -1,3 +1,24 @@
+<a name="0.13.0"></a>
+# [0.13.0](https://github.com/ipld/js-ipld-dag-cbor/compare/v0.12.1...v0.13.0) (2018-10-01)
+
+
+### Bug Fixes
+
+* resolve falsy values ([0a49705](https://github.com/ipld/js-ipld-dag-cbor/commit/0a49705))
+
+
+### Features
+
+* serialize and de-serialize CID instances ([8585d65](https://github.com/ipld/js-ipld-dag-cbor/commit/8585d65))
+
+
+### BREAKING CHANGES
+
+* return values from de-serializer are now CID instances.
+Serializer still supports old link objects.
+
+
+
 <a name="0.12.1"></a>
 ## [0.12.1](https://github.com/ipld/js-ipld-dag-cbor/compare/v0.12.0...v0.12.1) (2018-06-29)
 

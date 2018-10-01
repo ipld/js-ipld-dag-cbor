@@ -1,6 +1,6 @@
 {
   "name": "ipld-dag-cbor",
-  "version": "0.12.1",
+  "version": "0.13.0",
   "description": "JavaScript implementation of the IPLD (InterpPlanetary Linked Data)",
   "leadMaintainer": "Volker Mische <volker.mische@gmail.com>",
   "main": "src/index.js",
