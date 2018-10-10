@@ -47,7 +47,7 @@ exports.resolve = (binaryBlob, path, callback) => {
 
     // out of scope
     let value
-    let len = parts.length
+    const len = parts.length
 
     for (let i = 0; i < len; i++) {
       const partialPath = parts.shift()
