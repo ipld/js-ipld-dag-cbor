@@ -70,7 +70,7 @@ function replaceCIDbyTAG (dagNode) {
       return tagCID(obj['/'])
     } else if (keys.length > 0) {
       // Recursive transform
-      let out = {}
+      const out = {}
       keys.forEach((key) => {
         if (typeof obj[key] === 'object') {
           out[key] = transform(obj[key])
