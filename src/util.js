@@ -125,6 +125,7 @@ exports.deserialize = (data, callback) => {
  * @param {Object} [options] - Options to create the CID
  * @param {number} [options.version=1] - CID version number
  * @param {string} [options.hashAlg] - Defaults to hashAlg for the resolver
+ * @param {number} [options.hashLen] - Optionally trim the digest to this length
  * @param {CidCallback} callback - Callback that handles the return value
  * @returns {void}
  */
@@ -135,10 +136,11 @@ exports.cid = (dagNode, options, callback) => {
   }
   options = options || {}
   const hashAlg = options.hashAlg || resolver.defaultHashAlg
+  const hashLen = options.hashLen
   const version = typeof options.version === 'undefined' ? 1 : options.version
   waterfall([
     (cb) => exports.serialize(dagNode, cb),
-    (serialized, cb) => multihashing(serialized, hashAlg, cb),
+    (serialized, cb) => multihashing(serialized, hashAlg, hashLen, cb),
     (mh, cb) => cb(null, new CID(version, resolver.multicodec, mh))
   ], callback)
 }
