@@ -74,6 +74,24 @@ describe('util', () => {
       expect(cid.multihash).to.exist()
       const mh = multihash.decode(cid.multihash)
       expect(mh.name).to.equal('sha2-512')
+      expect(mh.length).to.equal(64)
+      done()
+    })
+  })
+
+  it('.cid with hashAlg and hashLen', (done) => {
+    dagCBOR.util.cid(obj, { hashAlg: 'keccak-256', hashLen: 28 }, (err, cid) => {
+      expect(err).to.not.exist()
+      expect(cid.version).to.equal(1)
+      expect(cid.codec).to.equal('dag-cbor')
+      expect(cid.multihash).to.exist()
+      const mh = multihash.decode(cid.multihash)
+      expect(mh.name).to.equal('keccak-256')
+      expect(mh.length).to.equal(28)
+      // The CID must be 32 bytes including 4 bytes for
+      // <cid-version><multicodec><hash-function><digest-size>
+      expect(cid.buffer.length).to.equal(32)
+      expect(cid.toBaseEncodedString()).to.equal('z6dSUELEcAsg5oXs7gsv42rYfczTLizSBTpGUa5M3bxe')
       done()
     })
   })
