@@ -3,8 +3,6 @@
 const cbor = require('borc')
 const multihashing = require('multihashing-async')
 const CID = require('cids')
-const waterfall = require('async/waterfall')
-const setImmediate = require('async/setImmediate')
 const isCircular = require('is-circular')
 
 const resolver = require('./resolver')
@@ -138,9 +136,12 @@ exports.cid = (dagNode, options, callback) => {
   const hashAlg = options.hashAlg || resolver.defaultHashAlg
   const hashLen = options.hashLen
   const version = typeof options.version === 'undefined' ? 1 : options.version
-  waterfall([
-    (cb) => exports.serialize(dagNode, cb),
-    (serialized, cb) => multihashing(serialized, hashAlg, hashLen, cb),
-    (mh, cb) => cb(null, new CID(version, resolver.multicodec, mh))
-  ], callback)
+
+  exports.serialize(dagNode, (err, serialized) => {
+    if (err) return callback(err)
+    multihashing(serialized, hashAlg, hashLen, (err, mh) => {
+      if (err) return callback(err)
+      callback(null, new CID(version, resolver.multicodec, mh))
+    })
+  })
 }
