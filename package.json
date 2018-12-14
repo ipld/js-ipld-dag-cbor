@@ -37,7 +37,6 @@
   },
   "homepage": "https://github.com/ipld/js-ipld-dag-cbor",
   "dependencies": {
-    "async": "^2.6.1",
     "borc": "hugomrdias/borc#feat/reduce-bundle-size",
     "bs58": "^4.0.1",
     "cids": "~0.5.5",
