@@ -37,7 +37,7 @@
   },
   "homepage": "https://github.com/ipld/js-ipld-dag-cbor",
   "dependencies": {
-    "borc": "hugomrdias/borc#feat/reduce-bundle-size",
+    "borc": "^2.1.0",
     "bs58": "^4.0.1",
     "cids": "~0.5.5",
     "is-circular": "^1.0.2",
@@ -46,7 +46,7 @@
     "traverse": "~0.6.6"
   },
   "devDependencies": {
-    "aegir": "github:ipfs/aegir#feat/make-exp-build-test-default",
+    "aegir": "^18.0.2",
     "chai": "^4.2.0",
     "deep-freeze": "0.0.1",
     "dirty-chai": "^2.0.1",
