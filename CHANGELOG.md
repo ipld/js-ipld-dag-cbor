@@ -1,3 +1,18 @@
+<a name="0.13.1"></a>
+## [0.13.1](https://github.com/ipld/js-ipld-dag-cbor/compare/v0.13.0...v0.13.1) (2019-01-08)
+
+
+### Bug Fixes
+
+* reduce bundle size ([#87](https://github.com/ipld/js-ipld-dag-cbor/issues/87)) ([ab637f3](https://github.com/ipld/js-ipld-dag-cbor/commit/ab637f3))
+
+
+### Features
+
+* support the hashLen option of multihashing ([#83](https://github.com/ipld/js-ipld-dag-cbor/issues/83)) ([9ffb5e2](https://github.com/ipld/js-ipld-dag-cbor/commit/9ffb5e2))
+
+
+
 <a name="0.13.0"></a>
 # [0.13.0](https://github.com/ipld/js-ipld-dag-cbor/compare/v0.12.1...v0.13.0) (2018-10-01)
 
