@@ -23,16 +23,6 @@ function tagCID (cid) {
   ]))
 }
 
-const decoder = new cbor.Decoder({
-  tags: {
-    [CID_CBOR_TAG]: (val) => {
-      // remove that 0
-      val = val.slice(1)
-      return new CID(val)
-    }
-  }
-})
-
 function replaceCIDbyTAG (dagNode) {
   let circular
   try {
@@ -86,6 +76,24 @@ function replaceCIDbyTAG (dagNode) {
 }
 
 exports = module.exports
+
+let decoder = null
+
+exports.configureDecoder = (opts) => {
+  opts = opts || {}
+  decoder = new cbor.Decoder({
+    tags: Object.assign({
+      [CID_CBOR_TAG]: (val) => {
+        // remove that 0
+        val = val.slice(1)
+        return new CID(val)
+      }
+    }, opts.tags || {}),
+    size: opts.size
+  })
+}
+
+exports.configureDecoder() // Setup default cbor.Decoder
 
 exports.serialize = (dagNode, callback) => {
   let serialized

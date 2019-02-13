@@ -44,6 +44,27 @@ describe('util', () => {
     })
   })
 
+  it('.serialize and .deserialize large objects', (done) => {
+    const size = 65536 * 2
+    const largeObj = { someKey: [].slice.call(new Uint8Array(size)) }
+    // Configure decoder with custom size
+    dagCBOR.util.configureDecoder({ size: size + 1 })
+
+    dagCBOR.util.serialize(largeObj, (err, serialized) => {
+      expect(err).to.not.exist()
+      expect(Buffer.isBuffer(serialized)).to.equal(true)
+
+      dagCBOR.util.deserialize(serialized, (err, deserialized) => {
+        expect(err).to.not.exist()
+        expect(largeObj).to.eql(deserialized)
+
+        // Reset decoder back to default
+        dagCBOR.util.configureDecoder()
+        done()
+      })
+    })
+  })
+
   it('error catching', (done) => {
     const circlarObj = {}
     circlarObj.a = circlarObj
