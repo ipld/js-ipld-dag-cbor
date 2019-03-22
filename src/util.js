@@ -77,20 +77,47 @@ function replaceCIDbyTAG (dagNode) {
 
 exports = module.exports
 
+const defaultTags = {
+  [CID_CBOR_TAG]: (val) => {
+    // remove that 0
+    val = val.slice(1)
+    return new CID(val)
+  }
+}
+const defaultSize = 64 * 1024 // current decoder heap size, 64 Kb
+let currentSize = defaultSize
+const defaultMaxSize = 64 * 1024 * 1024 // max heap size when auto-growing, 64 Mb
+let maxSize = defaultMaxSize
 let decoder = null
 
-exports.configureDecoder = (opts) => {
-  opts = opts || {}
-  decoder = new cbor.Decoder({
-    tags: Object.assign({
-      [CID_CBOR_TAG]: (val) => {
-        // remove that 0
-        val = val.slice(1)
-        return new CID(val)
-      }
-    }, opts.tags || {}),
-    size: opts.size
-  })
+exports.configureDecoder = (options) => {
+  let tags = defaultTags
+
+  if (options) {
+    if (typeof options.size === 'number') {
+      currentSize = options.size
+    }
+    if (typeof options.maxSize === 'number') {
+      maxSize = options.maxSize
+    }
+    if (options.tags) {
+      tags = Object.assign({}, defaultTags, options && options.tags)
+    }
+  } else {
+    // no options, reset to defaults
+    currentSize = defaultSize
+    maxSize = defaultMaxSize
+  }
+
+  console.log('currentSize', currentSize, 'maxSize', maxSize)
+  let decoderOptions = {
+    tags: tags,
+    size: currentSize
+  }
+
+  decoder = new cbor.Decoder(decoderOptions)
+  // borc edits opts.size in-place so we can capture _actual_ size
+  currentSize = decoderOptions.size
 }
 
 exports.configureDecoder() // Setup default cbor.Decoder
@@ -109,6 +136,14 @@ exports.serialize = (dagNode, callback) => {
 
 exports.deserialize = (data, callback) => {
   let deserialized
+
+  if (data.length > currentSize && data.length <= maxSize) {
+    exports.configureDecoder({ size: data.length })
+  }
+
+  if (data.length > currentSize) {
+    return setImmediate(() => callback(new Error('Data is too large to deserialize with current decoder')))
+  }
 
   try {
     deserialized = decoder.decodeFirst(data)

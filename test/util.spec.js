@@ -45,20 +45,38 @@ describe('util', () => {
   })
 
   it('.serialize and .deserialize large objects', (done) => {
-    const size = 65536 * 2
-    const largeObj = { someKey: [].slice.call(new Uint8Array(size)) }
-    // Configure decoder with custom size
-    dagCBOR.util.configureDecoder({ size: size + 1 })
+    // larger than the default borc heap size, should auto-grow the heap
+    const dataSize = 128 * 1024
+    const largeObj = { someKey: [].slice.call(new Uint8Array(dataSize)) }
 
     dagCBOR.util.serialize(largeObj, (err, serialized) => {
       expect(err).to.not.exist()
-      expect(Buffer.isBuffer(serialized)).to.equal(true)
+      expect(Buffer.isBuffer(serialized)).to.be.true()
 
       dagCBOR.util.deserialize(serialized, (err, deserialized) => {
         expect(err).to.not.exist()
         expect(largeObj).to.eql(deserialized)
+        // reset decoder to default
+        dagCBOR.util.configureDecoder()
+        done()
+      })
+    })
+  })
 
-        // Reset decoder back to default
+  it('.deserialize fail on large objects beyond maxSize', (done) => {
+    // larger than the default borc heap size, should bust the heap if we turn off auto-grow
+    const dataSize = (128 * 1024) + 1
+    const largeObj = { someKey: [].slice.call(new Uint8Array(dataSize)) }
+
+    dagCBOR.util.configureDecoder({ size: 64 * 1024, maxSize: 128 * 1024 }) // 64 Kb start, 128 Kb max
+    dagCBOR.util.serialize(largeObj, (err, serialized) => {
+      expect(err).to.not.exist()
+      expect(Buffer.isBuffer(serialized)).to.be.true()
+
+      dagCBOR.util.deserialize(serialized, (err, deserialized) => {
+        expect(err).to.be.an('error')
+        expect(deserialized).to.not.exist()
+        // reset decoder to default
         dagCBOR.util.configureDecoder()
         done()
       })
