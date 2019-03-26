@@ -26,6 +26,7 @@
   - [Use in a browser with browserify, webpack or any other bundler](#use-in-a-browser-with-browserify-webpack-or-any-other-bundler)
   - [Use in a browser Using a script tag](#use-in-a-browser-using-a-script-tag)
 - [Usage](#usage)
+- [API](#api)
 - [Contribute](#contribute)
 - [License](#license)
 
@@ -71,17 +72,67 @@ const file = {
   size: 11
 }
 
-// CBOR encoded Buffer
-dagCBOR.util.serialize(file, (err, serialized) => {})
-
-
-dagCBOR.util.deserialize(serialized, (err, node) => {
+dagCBOR.util.serialize(file, (err, serialized) => {
   if (err) {
     throw err
   }
-  console.log(node)
+
+  console.log(`Encoded as a ${serialized.length} byte Buffer`)
+
+  dagCBOR.util.deserialize(serialized, (err, node) => {
+    if (err) {
+      throw err
+    }
+
+    console.log('Decoded as:', node)
+    require('assert').deepEqual(node, file) // should match
+  })
 })
+
+// → Encoded as a 22 byte Buffer
+// → Decoded as: { name: 'hello.txt', size: 11 }
 ```
+
+## API
+
+### `dagCBOR.util.serialize(obj, callback)`
+
+Encodes an object into IPLD CBOR form, replacing any CIDs found within the object to CBOR tags (with an id of `42`).
+
+ - `obj` (any): any object able to be serialized as CBOR
+ - `callback` (`Function`): function to be called when serialization is complete, arguments are: `error` and the serialized node if no error was encountered.
+
+ ### `dagCBOR.util.deserialize(serialized, callback)`
+
+ Decodes an IPLD CBOR encoded representation, restoring any CBOR tags (id `42`) to CIDs.
+
+  - `serialized` (`Buffer` or `String`): a binary blob representing an IPLD CBOR encoded object.
+  - `callback` (`Function`): function to be called when deserialization is complete, arguments are: `error` and the deserialized object if no error was encountered.
+
+### `dagCBOR.util.configureDecoder([options])`
+
+Configure the underlying CBOR decoder.
+
+Possible values in the `options` argument are:
+
+ - `size` (`Number`, optional): the current heap size used in CBOR parsing, this may grow automatically as larger blocks are encountered up to `maxSize`. Default: `65536` (64Kb).
+ - `maxSize` (`Number`, optional): the maximum size the CBOR parsing heap is allowed to grow to before `dagCBOR.util.deserialize()` returns an error. Default: `67108864` (64Mb).
+ - `tags` (`Object`, optional): an object whose keys are CBOR tag numbers and values are transform functions that accept a `value` and return a decoded representation of that `value`.
+
+ The CBOR decoder uses a heap size that is a power of two. Setting `size` to a number other than a power of two will result in a heap using the next-largest power of two.
+
+ Calling `dagCBOR.util.configureDecoder()` with no arguments will reset to the default decoder `size`, `maxSize` and `tags`.
+
+### `dagCBOR.util.cid(obj[, options,] callback)`
+
+Create a [CID](https://github.com/multiformats/js-cid) for the given unserialized object.
+
+ - `obj` (any): any object able to be serialized as CBOR
+ - `options` (`Object`):
+  * `hashAlg` (`String`): a [registered multicodec](https://github.com/multiformats/multicodec/blob/master/table.csv) hash algorithm.
+  * `hashLen` (`String`): an optional hash length
+  * `version` (`Number`): CID version number, defaults to `1`
+ - `callback` (`Function`): function to be called when the object is serialized and a CID is created from that serialized form, arguments are: `error` and the created CID if no error was encountered.
 
 ## Contribute
 
