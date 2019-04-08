@@ -38,7 +38,7 @@
   "homepage": "https://github.com/ipld/js-ipld-dag-cbor",
   "dependencies": {
     "borc": "^2.1.0",
-    "cids": "~0.5.7",
+    "cids": "~0.6.0",
     "is-circular": "^1.0.2",
     "multihashing-async": "~0.5.2",
     "traverse": "~0.6.6"
