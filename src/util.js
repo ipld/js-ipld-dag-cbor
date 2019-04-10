@@ -1,11 +1,10 @@
 'use strict'
 
 const cbor = require('borc')
+const multicodec = require('multicodec')
 const multihashing = require('multihashing-async')
 const CID = require('cids')
 const isCircular = require('is-circular')
-
-const resolver = require('./resolver')
 
 // https://github.com/ipfs/go-ipfs/issues/3570#issuecomment-273931692
 const CID_CBOR_TAG = 42
@@ -49,14 +48,7 @@ function replaceCIDbyTAG (dagNode) {
 
     const keys = Object.keys(obj)
 
-    if (keys.length === 1 && keys[0] === '/') {
-      // Multiaddr encoding
-      // if (typeof link === 'string' && isMultiaddr(link)) {
-      //  link = new Multiaddr(link).buffer
-      // }
-
-      return tagCID(obj['/'])
-    } else if (keys.length > 0) {
+    if (keys.length > 0) {
       // Recursive transform
       const out = {}
       keys.forEach((key) => {
@@ -77,6 +69,9 @@ function replaceCIDbyTAG (dagNode) {
 
 exports = module.exports
 
+exports.codec = multicodec.DAG_CBOR
+exports.defaultHashAlg = multicodec.SHA2_256
+
 const defaultTags = {
   [CID_CBOR_TAG]: (val) => {
     // remove that 0
@@ -90,6 +85,14 @@ const defaultMaxSize = 64 * 1024 * 1024 // max heap size when auto-growing, 64 M
 let maxSize = defaultMaxSize
 let decoder = null
 
+/**
+ * Configure the underlying CBOR decoder.
+ *
+ * @param {Object} [options] - The options the decoder takes. The decoder will reset to the defaul values if no options are given.
+ * @param {number} [options.size=65536] - The current heap size used in CBOR parsing, this may grow automatically as larger blocks are encountered up to `maxSize`
+ * @param {number} [options.maxSize=67108864] - The maximum size the CBOR parsing heap is allowed to grow to before `dagCBOR.util.deserialize()` returns an error
+ * @param {Object} [options.tags] - An object whose keys are CBOR tag numbers and values are transform functions that accept a `value` and return a decoded representation of that `value`
+ */
 exports.configureDecoder = (options) => {
   let tags = defaultTags
 
@@ -121,69 +124,55 @@ exports.configureDecoder = (options) => {
 
 exports.configureDecoder() // Setup default cbor.Decoder
 
-exports.serialize = (dagNode, callback) => {
-  let serialized
+/**
+ * Serialize internal representation into a binary CBOR block.
+ *
+ * @param {Object} node - Internal representation of a CBOR block
+ * @returns {Buffer} - The encoded binary representation
+ */
+exports.serialize = (node) => {
+  const nodeTagged = replaceCIDbyTAG(node)
+  const serialized = cbor.encode(nodeTagged)
 
-  try {
-    const dagNodeTagged = replaceCIDbyTAG(dagNode)
-    serialized = cbor.encode(dagNodeTagged)
-  } catch (err) {
-    return setImmediate(() => callback(err))
-  }
-  setImmediate(() => callback(null, serialized))
+  return serialized
 }
 
-exports.deserialize = (data, callback) => {
-  let deserialized
-
+/**
+ * Deserialize CBOR block into the internal representation.
+ *
+ * @param {Buffer} data - Binary representation of a CBOR block
+ * @returns {Object} - An object that conforms to the IPLD Data Model
+ */
+exports.deserialize = (data) => {
   if (data.length > currentSize && data.length <= maxSize) {
     exports.configureDecoder({ size: data.length })
   }
 
   if (data.length > currentSize) {
-    return setImmediate(() => callback(new Error('Data is too large to deserialize with current decoder')))
+    throw new Error('Data is too large to deserialize with current decoder')
   }
 
-  try {
-    deserialized = decoder.decodeFirst(data)
-  } catch (err) {
-    return setImmediate(() => callback(err))
-  }
+  const deserialized = decoder.decodeFirst(data)
 
-  setImmediate(() => callback(null, deserialized))
+  return deserialized
 }
 
 /**
- * @callback CidCallback
- * @param {?Error} error - Error if getting the CID failed
- * @param {?CID} cid - CID if call was successful
- */
-/**
- * Get the CID of the DAG-Node.
+ * Calculate the CID of the binary blob.
  *
- * @param {Object} dagNode - Internal representation
- * @param {Object} [options] - Options to create the CID
- * @param {number} [options.version=1] - CID version number
- * @param {string} [options.hashAlg] - Defaults to hashAlg for the resolver
- * @param {number} [options.hashLen] - Optionally trim the digest to this length
- * @param {CidCallback} callback - Callback that handles the return value
- * @returns {void}
+ * @param {Object} binaryBlob - Encoded IPLD Node
+ * @param {Object} [userOptions] - Options to create the CID
+ * @param {number} [userOptions.cidVersion=1] - CID version number
+ * @param {string} [UserOptions.hashAlg] - Defaults to the defaultHashAlg of the format
+ * @returns {Promise.<CID>}
  */
-exports.cid = (dagNode, options, callback) => {
-  if (typeof options === 'function') {
-    callback = options
-    options = {}
-  }
-  options = options || {}
-  const hashAlg = options.hashAlg || resolver.defaultHashAlg
-  const hashLen = options.hashLen
-  const version = typeof options.version === 'undefined' ? 1 : options.version
+exports.cid = async (binaryBlob, userOptions) => {
+  const defaultOptions = { cidVersion: 1, hashAlg: exports.defaultHashAlg }
+  const options = Object.assign(defaultOptions, userOptions)
 
-  exports.serialize(dagNode, (err, serialized) => {
-    if (err) return callback(err)
-    multihashing(serialized, hashAlg, hashLen, (err, mh) => {
-      if (err) return callback(err)
-      callback(null, new CID(version, resolver.multicodec, mh))
-    })
-  })
+  const multihash = await multihashing(binaryBlob, options.hashAlg)
+  const codecName = multicodec.print[exports.codec]
+  const cid = new CID(options.cidVersion, codecName, multihash)
+
+  return cid
 }

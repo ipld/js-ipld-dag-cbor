@@ -1,5 +1,5 @@
-/* eslint max-nested-callbacks: ["error", 8] */
 /* eslint-env mocha */
+/* eslint max-nested-callbacks: ["error", 5] */
 'use strict'
 
 const chai = require('chai')
@@ -7,159 +7,99 @@ const dirtyChai = require('dirty-chai')
 const expect = chai.expect
 chai.use(dirtyChai)
 
-const waterfall = require('async/waterfall')
-const parallel = require('async/parallel')
-const each = require('async/each')
 const CID = require('cids')
 
 const dagCBOR = require('../src')
 const resolver = dagCBOR.resolver
 
 describe('IPLD format resolver (local)', () => {
-  let emptyNodeBlob
-  let nodeBlob
-
-  before((done) => {
-    const emptyNode = {}
-    const node = {
-      name: 'I am a node',
-      someLink: {
-        '/': 'QmaNh5d3hFiqJAGjHmvxihSnWDGqYZCn7H2XHpbttYjCNE'
-      },
-      nest: {
-        foo: {
-          bar: 'baz'
-        }
-      },
-      array: [
-        { a: 'b' },
-        2
-      ]
-    }
-
-    waterfall([
-      (cb) => parallel([
-        (cb) => dagCBOR.util.serialize(emptyNode, cb),
-        (cb) => dagCBOR.util.serialize(node, cb)
-      ], cb),
-      (blocks, cb) => {
-        emptyNodeBlob = blocks[0]
-        nodeBlob = blocks[1]
-        cb()
+  const emptyNode = {}
+  const node = {
+    name: 'I am a node',
+    someLink: new CID('QmaNh5d3hFiqJAGjHmvxihSnWDGqYZCn7H2XHpbttYjCNE'),
+    nest: {
+      foo: {
+        bar: 'baz'
       }
-    ], done)
-  })
+    },
+    array: [
+      { a: 'b' },
+      2
+    ],
+    nullValue: null,
+    boolValue: true
+  }
 
-  it('multicodec is dag-cbor', () => {
-    expect(resolver.multicodec).to.equal('dag-cbor')
-  })
-
-  it('defaultHashAlg is sha2-256', () => {
-    expect(resolver.defaultHashAlg).to.equal('sha2-256')
-  })
+  const emptyNodeBlob = dagCBOR.util.serialize(emptyNode)
+  const nodeBlob = dagCBOR.util.serialize(node)
 
   describe('empty node', () => {
     describe('resolver.resolve', () => {
-      it('root', (done) => {
-        resolver.resolve(emptyNodeBlob, '/', (err, result) => {
-          expect(err).to.not.exist()
-          expect(result.value).to.be.eql({})
-          done()
-        })
+      it('root', () => {
+        const result = resolver.resolve(emptyNodeBlob, '/')
+        expect(result.value).to.be.eql({})
       })
     })
 
-    it('resolver.tree', (done) => {
-      resolver.tree(emptyNodeBlob, (err, paths) => {
-        expect(err).to.not.exist()
-        expect(paths).to.eql([])
-        done()
-      })
+    it('resolver.tree', () => {
+      const paths = resolver.tree(emptyNodeBlob).next()
+      expect(paths.value).to.be.undefined()
+      expect(paths.done).to.be.true()
     })
   })
 
   describe('node', () => {
-    it('resolver.tree', (done) => {
-      resolver.tree(nodeBlob, (err, paths) => {
-        expect(err).to.not.exist()
-
-        expect(paths).to.eql([
-          'name',
-          'nest',
-          'nest/foo',
-          'nest/foo/bar',
-          'array',
-          'array/0',
-          'array/0/a',
-          'array/1',
-          'someLink'
-        ])
-
-        done()
-      })
-    })
-
-    it('resolver.isLink with valid Link', (done) => {
-      resolver.isLink(nodeBlob, 'someLink', (err, link) => {
-        expect(err).to.not.exist()
-        expect(CID.isCID(link)).to.equal(true)
-        done()
-      })
-    })
-
-    it('resolver.isLink with invalid Link', (done) => {
-      resolver.isLink(nodeBlob, '', (err, link) => {
-        expect(err).to.not.exist()
-        expect(link).to.equal(false)
-        done()
-      })
+    it('resolver.tree', () => {
+      const tree = resolver.tree(nodeBlob)
+      const paths = [...tree]
+      expect(paths).to.have.members([
+        'name',
+        'nest',
+        'nest/foo',
+        'nest/foo/bar',
+        'array',
+        'array/0',
+        'array/0/a',
+        'array/1',
+        'someLink',
+        'boolValue',
+        'nullValue'
+      ])
     })
 
     describe('resolver.resolve', () => {
-      it('path within scope', (done) => {
-        resolver.resolve(nodeBlob, 'name', (err, result) => {
-          expect(err).to.not.exist()
-          expect(result.value).to.equal('I am a node')
-          done()
-        })
+      it('path within scope', () => {
+        const result = resolver.resolve(nodeBlob, 'name')
+        expect(result.value).to.equal('I am a node')
       })
 
-      it('path within scope, but nested', (done) => {
-        resolver.resolve(nodeBlob, 'nest/foo/bar', (err, result) => {
-          expect(err).to.not.exist()
-          expect(result.value).to.equal('baz')
-          done()
-        })
+      it('path within scope, but nested', () => {
+        const result = resolver.resolve(nodeBlob, 'nest/foo/bar')
+        expect(result.value).to.equal('baz')
       })
 
-      it('should resolve falsy values for path within scope', (done) => {
-        const node = {
+      it('should resolve falsy values for path within scope', () => {
+        const falsyNode = {
           nu11: null,
           f4lse: false,
           empty: '',
           zero: 0
         }
 
-        dagCBOR.util.serialize(node, (err, nodeBlob) => {
-          expect(err).to.not.exist()
+        const falsyNodeBlob = dagCBOR.util.serialize(falsyNode)
 
-          each(Object.keys(node), (key, cb) => {
-            resolver.resolve(nodeBlob, key, (err, result) => {
-              expect(err).to.not.exist()
-              expect(result.value).to.equal(node[key])
-              cb()
-            })
-          }, done)
+        Object.keys(falsyNode).map((key) => {
+          const result = resolver.resolve(falsyNodeBlob, key)
+          expect(result.value).to.equal(falsyNode[key])
         })
       })
 
-      it('path out of scope', (done) => {
-        resolver.resolve(nodeBlob, 'someLink/a/b/c', (err, result) => {
-          expect(err).to.not.exist()
-          expect(result.value).to.eql(new CID('QmaNh5d3hFiqJAGjHmvxihSnWDGqYZCn7H2XHpbttYjCNE'))
-          expect(result.remainderPath).to.equal('a/b/c')
-          done()
-        })
+      it('path out of scope', () => {
+        const result = resolver.resolve(nodeBlob, 'someLink/a/b/c')
+        expect(result.value.equals(
+          new CID('QmaNh5d3hFiqJAGjHmvxihSnWDGqYZCn7H2XHpbttYjCNE'))
+        ).to.be.true()
+        expect(result.remainderPath).to.equal('a/b/c')
       })
     })
   })

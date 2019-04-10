@@ -6,7 +6,6 @@ const dirtyChai = require('dirty-chai')
 const expect = chai.expect
 chai.use(dirtyChai)
 const garbage = require('garbage')
-const map = require('async/map')
 const dagCBOR = require('../src')
 const multihash = require('multihashes')
 const CID = require('cids')
@@ -24,150 +23,89 @@ describe('util', () => {
       link: new CID('QmRgutAxd8t7oGkSm4wmeuByG6M51wcTso6cubDdQtuEfL')
     }
   }
+  const serializedObj = dagCBOR.util.serialize(obj)
 
-  it('.serialize and .deserialize', (done) => {
-    dagCBOR.util.serialize(obj, (err, serialized) => {
-      expect(err).to.not.exist()
-      expect(Buffer.isBuffer(serialized)).to.equal(true)
+  it('.serialize and .deserialize', () => {
+    expect(Buffer.isBuffer(serializedObj)).to.equal(true)
 
-      // Check for the tag 42
-      // d8 = tag, 2a = 42
-      expect(
-        serialized.toString('hex').match(/d82a/g)
-      ).to.have.length(4)
+    // Check for the tag 42
+    // d8 = tag, 2a = 42
+    expect(
+      serializedObj.toString('hex').match(/d82a/g)
+    ).to.have.length(4)
 
-      dagCBOR.util.deserialize(serialized, (err, deserialized) => {
-        expect(err).to.not.exist()
-        expect(obj).to.eql(deserialized)
-        done()
-      })
-    })
+    const deserializedObj = dagCBOR.util.deserialize(serializedObj)
+    expect(obj).to.eql(deserializedObj)
   })
 
-  it('.serialize and .deserialize large objects', (done) => {
+  it('.serialize and .deserialize large objects', () => {
     // larger than the default borc heap size, should auto-grow the heap
     const dataSize = 128 * 1024
     const largeObj = { someKey: [].slice.call(new Uint8Array(dataSize)) }
 
-    dagCBOR.util.serialize(largeObj, (err, serialized) => {
-      expect(err).to.not.exist()
-      expect(Buffer.isBuffer(serialized)).to.be.true()
+    const serialized = dagCBOR.util.serialize(largeObj)
+    expect(Buffer.isBuffer(serialized)).to.be.true()
 
-      dagCBOR.util.deserialize(serialized, (err, deserialized) => {
-        expect(err).to.not.exist()
-        expect(largeObj).to.eql(deserialized)
-        // reset decoder to default
-        dagCBOR.util.configureDecoder()
-        done()
-      })
-    })
+    const deserialized = dagCBOR.util.deserialize(serialized)
+    expect(largeObj).to.eql(deserialized)
+    // reset decoder to default
+    dagCBOR.util.configureDecoder()
   })
 
-  it('.deserialize fail on large objects beyond maxSize', (done) => {
+  it('.deserialize fail on large objects beyond maxSize', () => {
     // larger than the default borc heap size, should bust the heap if we turn off auto-grow
     const dataSize = (128 * 1024) + 1
     const largeObj = { someKey: [].slice.call(new Uint8Array(dataSize)) }
 
     dagCBOR.util.configureDecoder({ size: 64 * 1024, maxSize: 128 * 1024 }) // 64 Kb start, 128 Kb max
-    dagCBOR.util.serialize(largeObj, (err, serialized) => {
-      expect(err).to.not.exist()
-      expect(Buffer.isBuffer(serialized)).to.be.true()
+    const serialized = dagCBOR.util.serialize(largeObj)
+    expect(Buffer.isBuffer(serialized)).to.be.true()
 
-      dagCBOR.util.deserialize(serialized, (err, deserialized) => {
-        expect(err).to.be.an('error')
-        expect(deserialized).to.not.exist()
-        // reset decoder to default
-        dagCBOR.util.configureDecoder()
-        done()
-      })
-    })
+    expect(() => dagCBOR.util.deserialize(serialized)).to.throw(
+      'Data is too large to deserialize with current decoder')
+    // reset decoder to default
+    dagCBOR.util.configureDecoder()
   })
 
-  it('error catching', (done) => {
+  it('.serialize and .deserialize object with slash as property', () => {
+    const slashObject = { '/': true }
+    const serialized = dagCBOR.util.serialize(slashObject)
+    const deserialized = dagCBOR.util.deserialize(serialized)
+    expect(deserialized).to.eql(slashObject)
+  })
+
+  it('error catching', () => {
     const circlarObj = {}
     circlarObj.a = circlarObj
-    dagCBOR.util.serialize(circlarObj, (err, serialized) => {
-      expect(err).to.exist()
-      expect(serialized).to.not.exist()
-      done()
-    })
+    expect(() => dagCBOR.util.serialize(circlarObj)).to.throw(
+      'The object passed has circular reference')
   })
 
-  it('.cid', (done) => {
-    dagCBOR.util.cid(obj, (err, cid) => {
-      expect(err).to.not.exist()
-      expect(cid.version).to.equal(1)
-      expect(cid.codec).to.equal('dag-cbor')
-      expect(cid.multihash).to.exist()
-      const mh = multihash.decode(cid.multihash)
-      expect(mh.name).to.equal('sha2-256')
-      done()
-    })
+  it('.cid', async () => {
+    const cid = await dagCBOR.util.cid(serializedObj)
+    expect(cid.version).to.equal(1)
+    expect(cid.codec).to.equal('dag-cbor')
+    expect(cid.multihash).to.exist()
+    const mh = multihash.decode(cid.multihash)
+    expect(mh.name).to.equal('sha2-256')
   })
 
-  it('.cid with hashAlg', (done) => {
-    dagCBOR.util.cid(obj, { hashAlg: 'sha2-512' }, (err, cid) => {
-      expect(err).to.not.exist()
-      expect(cid.version).to.equal(1)
-      expect(cid.codec).to.equal('dag-cbor')
-      expect(cid.multihash).to.exist()
-      const mh = multihash.decode(cid.multihash)
-      expect(mh.name).to.equal('sha2-512')
-      expect(mh.length).to.equal(64)
-      done()
-    })
+  it('.cid with hashAlg', async () => {
+    const cid = await dagCBOR.util.cid(serializedObj, { hashAlg: 'sha2-512' })
+    expect(cid.version).to.equal(1)
+    expect(cid.codec).to.equal('dag-cbor')
+    expect(cid.multihash).to.exist()
+    const mh = multihash.decode(cid.multihash)
+    expect(mh.name).to.equal('sha2-512')
+    expect(mh.length).to.equal(64)
   })
 
-  it('.cid with hashAlg and hashLen', (done) => {
-    dagCBOR.util.cid(obj, { hashAlg: 'keccak-256', hashLen: 28 }, (err, cid) => {
-      expect(err).to.not.exist()
-      expect(cid.version).to.equal(1)
-      expect(cid.codec).to.equal('dag-cbor')
-      expect(cid.multihash).to.exist()
-      const mh = multihash.decode(cid.multihash)
-      expect(mh.name).to.equal('keccak-256')
-      expect(mh.length).to.equal(28)
-      // The CID must be 32 bytes including 4 bytes for
-      // <cid-version><multicodec><hash-function><digest-size>
-      expect(cid.buffer.length).to.equal(32)
-      expect(cid.toBaseEncodedString()).to.equal('z6dSUELEcAsg5oXs7gsv42rYfczTLizSBTpGUa5M3bxe')
-      done()
-    })
-  })
-
-  it('strings', (done) => {
-    dagCBOR.util.cid('some test string', (err, cid) => {
-      expect(err).to.not.exist()
-      expect(cid.version).to.equal(1)
-      expect(cid.codec).to.equal('dag-cbor')
-      expect(cid.multihash).to.exist()
-      done()
-    })
-  })
-
-  it.skip('serialize and deserialize - garbage', (done) => {
-    const inputs = []
-
-    for (let i = 0; i < 1000; i++) {
-      inputs.push({ in: garbage(100) })
+  it('fuzz serialize and deserialize with garbage', () => {
+    for (let ii = 0; ii < 1000; ii++) {
+      let original = { in: garbage(100) }
+      let encoded = dagCBOR.util.serialize(original)
+      let decoded = dagCBOR.util.deserialize(encoded)
+      expect(decoded).to.eql(original)
     }
-
-    map(inputs, (input, cb) => {
-      dagCBOR.util.serialize(input, cb)
-    }, (err, encoded) => {
-      if (err) {
-        return done(err)
-      }
-      map(encoded, (enc, cb) => {
-        dagCBOR.util.deserialize(enc, cb)
-      }, (err, out) => {
-        if (err) {
-          return done(err)
-        }
-
-        expect(inputs).to.eql(out)
-        done()
-      })
-    })
   })
 })

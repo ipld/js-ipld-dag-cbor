@@ -1,6 +1,4 @@
 /* eslint-env mocha */
-/* eslint max-nested-callbacks: ["error", 8] */
-
 'use strict'
 
 const chai = require('chai')
@@ -36,133 +34,83 @@ describe('dag-cbor interop tests', () => {
   if (!isNode) { return }
 
   describe('deserialize and compare', () => {
-    it('array-link', (done) => {
-      dagCBOR.util.deserialize(arrayLinkCBOR, (err, node) => {
-        expect(err).to.not.exist()
+    it('array-link', async () => {
+      const node = dagCBOR.util.deserialize(arrayLinkCBOR)
+      expect(node).to.eql(arrayLinkJS)
 
-        dagCBOR.util.cid(node, (err, cid) => {
-          expect(err).to.not.exist()
-          expect(cid.equals(expectedCIDs.arrayLink)).to.be.true()
-          done()
-        })
-      })
+      const cid = await dagCBOR.util.cid(arrayLinkCBOR)
+      expect(cid.equals(expectedCIDs.arrayLink)).to.be.true()
     })
 
-    it('empty-array', (done) => {
-      dagCBOR.util.deserialize(emptyArrayCBOR, (err, node) => {
-        expect(err).to.not.exist()
-        expect(node).to.eql(emptyArrayJS)
+    it('empty-array', async () => {
+      const node = dagCBOR.util.deserialize(emptyArrayCBOR)
+      expect(node).to.eql(emptyArrayJS)
 
-        dagCBOR.util.cid(node, (err, cid) => {
-          expect(err).to.not.exist()
-          expect(cid.equals(expectedCIDs.emptyArray)).to.be.true()
-          done()
-        })
-      })
+      const cid = await dagCBOR.util.cid(emptyArrayCBOR)
+      expect(cid.equals(expectedCIDs.emptyArray)).to.be.true()
     })
 
-    it('empty-obj', (done) => {
-      dagCBOR.util.deserialize(emptyObjCBOR, (err, node) => {
-        expect(err).to.not.exist()
-        expect(node).to.eql(emptyObjJS)
+    it('empty-obj', async () => {
+      const node = dagCBOR.util.deserialize(emptyObjCBOR)
+      expect(node).to.eql(emptyObjJS)
 
-        dagCBOR.util.cid(node, (err, cid) => {
-          expect(err).to.not.exist()
-          expect(cid.equals(expectedCIDs.emptyObj)).to.be.true()
-          done()
-        })
-      })
+      const cid = await dagCBOR.util.cid(emptyObjCBOR)
+      expect(cid.equals(expectedCIDs.emptyObj)).to.be.true()
     })
 
-    it('foo', (done) => {
-      dagCBOR.util.deserialize(fooCBOR, (err, node) => {
-        expect(err).to.not.exist()
-        expect(node).to.eql(fooJS)
+    it('foo', async () => {
+      const node = dagCBOR.util.deserialize(fooCBOR)
+      expect(node).to.eql(fooJS)
 
-        dagCBOR.util.cid(node, (err, cid) => {
-          expect(err).to.not.exist()
-          expect(cid.equals(expectedCIDs.foo)).to.be.true()
-          done()
-        })
-      })
+      const cid = await dagCBOR.util.cid(fooCBOR)
+      expect(cid.equals(expectedCIDs.foo)).to.be.true()
     })
 
-    it('obj-no-link', (done) => {
-      dagCBOR.util.deserialize(objNoLinkCBOR, (err, node) => {
-        expect(err).to.not.exist()
-        expect(node).to.eql(objNoLinkJS)
+    it('obj-no-link', async () => {
+      const node = dagCBOR.util.deserialize(objNoLinkCBOR)
+      expect(node).to.eql(objNoLinkJS)
 
-        dagCBOR.util.cid(node, (err, cid) => {
-          expect(err).to.not.exist()
-          expect(cid.equals(expectedCIDs.objNoLink)).to.be.true()
-          done()
-        })
-      })
+      const cid = await dagCBOR.util.cid(objNoLinkCBOR)
+      expect(cid.equals(expectedCIDs.objNoLink)).to.be.true()
     })
 
-    it('obj-with-link', (done) => {
-      if (!isNode) { done() }
+    it('obj-with-link', async () => {
+      if (!isNode) { return }
 
-      dagCBOR.util.deserialize(objWithLinkCBOR, (err, node) => {
-        expect(err).to.not.exist()
-
-        dagCBOR.util.cid(node, (err, cid) => {
-          expect(err).to.not.exist()
-          expect(cid.equals(expectedCIDs.objWithLink)).to.be.true()
-          done()
-        })
-      })
+      const cid = await dagCBOR.util.cid(objWithLinkCBOR)
+      expect(cid.equals(expectedCIDs.objWithLink)).to.be.true()
     })
   })
 
   describe('serialise and compare', () => {
-    it('array-link', (done) => {
-      dagCBOR.util.serialize(arrayLinkJS, (err, serialized) => {
-        expect(err).to.not.exist()
-
-        expect(serialized).to.eql(arrayLinkCBOR)
-        done()
-      })
+    it('array-link', () => {
+      const serialized = dagCBOR.util.serialize(arrayLinkJS)
+      expect(serialized).to.eql(arrayLinkCBOR)
     })
 
-    it('empty-array', (done) => {
-      dagCBOR.util.serialize(emptyArrayJS, (err, serialized) => {
-        expect(err).to.not.exist()
-        expect(serialized).to.eql(emptyArrayCBOR)
-        done()
-      })
+    it('empty-array', () => {
+      const serialized = dagCBOR.util.serialize(emptyArrayJS)
+      expect(serialized).to.eql(emptyArrayCBOR)
     })
 
-    it('empty-obj', (done) => {
-      dagCBOR.util.serialize(emptyObjJS, (err, serialized) => {
-        expect(err).to.not.exist()
-        expect(serialized).to.eql(emptyObjCBOR)
-        done()
-      })
+    it('empty-obj', () => {
+      const serialized = dagCBOR.util.serialize(emptyObjJS)
+      expect(serialized).to.eql(emptyObjCBOR)
     })
 
-    it('foo', (done) => {
-      dagCBOR.util.serialize(fooJS, (err, serialized) => {
-        expect(err).to.not.exist()
-        expect(serialized).to.eql(fooCBOR)
-        done()
-      })
+    it('foo', () => {
+      const serialized = dagCBOR.util.serialize(fooJS)
+      expect(serialized).to.eql(fooCBOR)
     })
 
-    it('obj-no-link', (done) => {
-      dagCBOR.util.serialize(objNoLinkJS, (err, serialized) => {
-        expect(err).to.not.exist()
-        expect(serialized).to.eql(objNoLinkCBOR)
-        done()
-      })
+    it('obj-no-link', () => {
+      const serialized = dagCBOR.util.serialize(objNoLinkJS)
+      expect(serialized).to.eql(objNoLinkCBOR)
     })
 
-    it('obj-with-link', (done) => {
-      dagCBOR.util.serialize(objWithLinkJS, (err, serialized) => {
-        expect(err).to.not.exist()
-        expect(serialized).to.eql(objWithLinkCBOR)
-        done()
-      })
+    it('obj-with-link', () => {
+      const serialized = dagCBOR.util.serialize(objWithLinkJS)
+      expect(serialized).to.eql(objWithLinkCBOR)
     })
   })
 })

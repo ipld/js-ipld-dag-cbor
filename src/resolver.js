@@ -1,135 +1,70 @@
 'use strict'
 
-const util = require('./util')
-const traverse = require('traverse')
 const CID = require('cids')
 
-exports = module.exports
+const util = require('./util')
 
-exports.multicodec = 'dag-cbor'
-exports.defaultHashAlg = 'sha2-256'
-
-/*
- * resolve: receives a path and a binary blob and returns the value on path,
- * throw if not possible. `binaryBlob` is CBOR encoded data.
+/**
+ * Resolves a path within a CBOR block.
+ *
+ * Returns the value or a link and the partial mising path. This way the
+ * IPLD Resolver can fetch the link and continue to resolve.
+ *
+ * @param {Buffer} binaryBlob - Binary representation of a CBOR block
+ * @param {string} [path='/'] - Path that should be resolved
+ * @returns {Object} result - Result of the path it it was resolved successfully
+ * @returns {*} result.value - Value the path resolves to
+ * @returns {string} result.remainderPath - If the path resolves half-way to a
+ *   link, then the `remainderPath` is the part after the link that can be used
+ *   for further resolving
  */
-exports.resolve = (binaryBlob, path, callback) => {
-  if (typeof path === 'function') {
-    callback = path
-    path = undefined
-  }
+exports.resolve = (binaryBlob, path) => {
+  let node = util.deserialize(binaryBlob)
 
-  util.deserialize(binaryBlob, (err, node) => {
-    if (err) {
-      return callback(err)
+  const parts = path.split('/').filter(Boolean)
+  while (parts.length) {
+    const key = parts.shift()
+    if (node[key] === undefined) {
+      throw new Error(`Object has no property '${key}'`)
     }
 
-    // root
-
-    if (!path || path === '/') {
-      return callback(null, {
+    node = node[key]
+    if (CID.isCID(node)) {
+      return {
         value: node,
-        remainderPath: ''
-      })
-    }
-
-    // within scope
-
-    const parts = path.split('/')
-    const val = traverse(node).get(parts)
-
-    if (val !== undefined) {
-      return callback(null, {
-        value: val,
-        remainderPath: ''
-      })
-    }
-
-    // out of scope
-    let value
-    const len = parts.length
-
-    for (let i = 0; i < len; i++) {
-      const partialPath = parts.shift()
-
-      if (Array.isArray(node) && !Buffer.isBuffer(node)) {
-        value = node[Number(partialPath)]
-      } if (node[partialPath]) {
-        value = node[partialPath]
-      } else {
-        // can't traverse more
-        if (!value) {
-          return callback(new Error('path not available at root'))
-        } else {
-          parts.unshift(partialPath)
-          return callback(null, {
-            value: value,
-            remainderPath: parts.join('/')
-          })
-        }
+        remainderPath: parts.join('/')
       }
-      node = value
     }
-  })
-}
-
-function flattenObject (obj, delimiter) {
-  delimiter = delimiter || '/'
-
-  if (Object.keys(obj).length === 0) {
-    return []
   }
 
-  return traverse(obj).reduce(function (acc, x) {
-    if (CID.isCID(x)) {
-      this.update(undefined)
-    }
-    const path = this.path.join(delimiter)
-
-    if (path !== '') {
-      acc.push({ path: path, value: x })
-    }
-    return acc
-  }, [])
+  return {
+    value: node,
+    remainderPath: ''
+  }
 }
 
-/*
- * tree: returns a flattened array with paths: values of the project. options
- * are option (i.e. nestness)
+const traverse = function * (node, path) {
+  // Traverse only objects and arrays
+  if (Buffer.isBuffer(node) || CID.isCID(node) || typeof node === 'string' ||
+      node === null) {
+    return
+  }
+  for (const item of Object.keys(node)) {
+    const nextpath = path === undefined ? item : path + '/' + item
+    yield nextpath
+    yield * traverse(node[item], nextpath)
+  }
+}
+
+/**
+ * Return all available paths of a block.
+ *
+ * @generator
+ * @param {Buffer} binaryBlob - Binary representation of a CBOR block
+ * @yields {string} - A single path
  */
-exports.tree = (binaryBlob, options, callback) => {
-  if (typeof options === 'function') {
-    callback = options
-    options = undefined
-  }
+exports.tree = function * (binaryBlob) {
+  const node = util.deserialize(binaryBlob)
 
-  options = options || {}
-
-  util.deserialize(binaryBlob, (err, node) => {
-    if (err) {
-      return callback(err)
-    }
-    const flat = flattenObject(node)
-    const paths = flat.map((el) => el.path)
-
-    callback(null, paths)
-  })
-}
-
-exports.isLink = (binaryBlob, path, callback) => {
-  exports.resolve(binaryBlob, path, (err, result) => {
-    if (err) {
-      return callback(err)
-    }
-
-    if (result.remainderPath.length > 0) {
-      return callback(new Error('path out of scope'))
-    }
-
-    if (CID.isCID(result.value)) {
-      callback(null, result.value)
-    } else {
-      callback(null, false)
-    }
-  })
+  yield * traverse(node)
 }
