@@ -72,22 +72,12 @@ const file = {
   size: 11
 }
 
-dagCBOR.util.serialize(file, (err, serialized) => {
-  if (err) {
-    throw err
-  }
+const serialized = dagCBOR.util.serialize(file)
+console.log(`Encoded as a ${serialized.length} byte Buffer`)
 
-  console.log(`Encoded as a ${serialized.length} byte Buffer`)
-
-  dagCBOR.util.deserialize(serialized, (err, node) => {
-    if (err) {
-      throw err
-    }
-
-    console.log('Decoded as:', node)
-    require('assert').deepEqual(node, file) // should match
-  })
-})
+const node = dagCBOR.util.deserialize(serialized)
+console.log('Decoded as:', node)
+require('assert').deepEqual(node, file) // should match
 
 // → Encoded as a 22 byte Buffer
 // → Decoded as: { name: 'hello.txt', size: 11 }
@@ -95,19 +85,21 @@ dagCBOR.util.serialize(file, (err, serialized) => {
 
 ## API
 
-### `dagCBOR.util.serialize(obj, callback)`
+### `dagCBOR.util.serialize(obj)`
 
 Encodes an object into IPLD CBOR form, replacing any CIDs found within the object to CBOR tags (with an id of `42`).
 
  - `obj` (any): any object able to be serialized as CBOR
- - `callback` (`Function`): function to be called when serialization is complete, arguments are: `error` and the serialized node if no error was encountered.
 
- ### `dagCBOR.util.deserialize(serialized, callback)`
+Returns the serialized node.
+
+### `dagCBOR.util.deserialize(serialized)`
 
  Decodes an IPLD CBOR encoded representation, restoring any CBOR tags (id `42`) to CIDs.
 
   - `serialized` (`Buffer` or `String`): a binary blob representing an IPLD CBOR encoded object.
-  - `callback` (`Function`): function to be called when deserialization is complete, arguments are: `error` and the deserialized object if no error was encountered.
+
+Returns the deserialized object.
 
 ### `dagCBOR.util.configureDecoder([options])`
 
@@ -123,7 +115,7 @@ Possible values in the `options` argument are:
 
  Calling `dagCBOR.util.configureDecoder()` with no arguments will reset to the default decoder `size`, `maxSize` and `tags`.
 
-### `dagCBOR.util.cid(obj[, options,] callback)`
+### `dagCBOR.util.cid(obj[, options,])`
 
 Create a [CID](https://github.com/multiformats/js-cid) for the given unserialized object.
 
@@ -132,7 +124,8 @@ Create a [CID](https://github.com/multiformats/js-cid) for the given unserialize
   * `hashAlg` (`String`): a [registered multicodec](https://github.com/multiformats/multicodec/blob/master/table.csv) hash algorithm.
   * `hashLen` (`String`): an optional hash length
   * `version` (`Number`): CID version number, defaults to `1`
- - `callback` (`Function`): function to be called when the object is serialized and a CID is created from that serialized form, arguments are: `error` and the created CID if no error was encountered.
+
+Returns a Promise with the created CID.
 
 ## Contribute
 
