@@ -74,7 +74,7 @@ describe('dag-cbor interop tests', () => {
       })
     })
 
-    it.skip('foo', (done) => {
+    it('foo', (done) => {
       dagCBOR.util.deserialize(fooCBOR, (err, node) => {
         expect(err).to.not.exist()
         expect(node).to.eql(fooJS)
@@ -141,7 +141,13 @@ describe('dag-cbor interop tests', () => {
       })
     })
 
-    it.skip('foo', (done) => {})
+    it('foo', (done) => {
+      dagCBOR.util.serialize(fooJS, (err, serialized) => {
+        expect(err).to.not.exist()
+        expect(serialized).to.eql(fooCBOR)
+        done()
+      })
+    })
 
     it('obj-no-link', (done) => {
       dagCBOR.util.serialize(objNoLinkJS, (err, serialized) => {
