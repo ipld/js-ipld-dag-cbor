@@ -42,7 +42,7 @@ describe('dag-cbor interop tests', () => {
 
         dagCBOR.util.cid(node, (err, cid) => {
           expect(err).to.not.exist()
-          expect(cid.equals(expectedCIDs['array-link'])).to.be.true()
+          expect(cid.equals(expectedCIDs.arrayLink)).to.be.true()
           done()
         })
       })
@@ -55,7 +55,7 @@ describe('dag-cbor interop tests', () => {
 
         dagCBOR.util.cid(node, (err, cid) => {
           expect(err).to.not.exist()
-          expect(cid.equals(expectedCIDs['empty-array'])).to.be.true()
+          expect(cid.equals(expectedCIDs.emptyArray)).to.be.true()
           done()
         })
       })
@@ -68,7 +68,7 @@ describe('dag-cbor interop tests', () => {
 
         dagCBOR.util.cid(node, (err, cid) => {
           expect(err).to.not.exist()
-          expect(cid.equals(expectedCIDs['empty-obj'])).to.be.true()
+          expect(cid.equals(expectedCIDs.emptyObj)).to.be.true()
           done()
         })
       })
@@ -94,7 +94,7 @@ describe('dag-cbor interop tests', () => {
 
         dagCBOR.util.cid(node, (err, cid) => {
           expect(err).to.not.exist()
-          expect(cid.equals(expectedCIDs['obj-no-link'])).to.be.true()
+          expect(cid.equals(expectedCIDs.objNoLink)).to.be.true()
           done()
         })
       })
@@ -108,7 +108,7 @@ describe('dag-cbor interop tests', () => {
 
         dagCBOR.util.cid(node, (err, cid) => {
           expect(err).to.not.exist()
-          expect(cid.equals(expectedCIDs['obj-with-link'])).to.be.true()
+          expect(cid.equals(expectedCIDs.objWithLink)).to.be.true()
           done()
         })
       })
