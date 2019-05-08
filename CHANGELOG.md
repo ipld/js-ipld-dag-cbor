@@ -1,3 +1,35 @@
+<a name="0.14.0"></a>
+# [0.14.0](https://github.com/ipld/js-ipld-dag-cbor/compare/v0.13.1...v0.14.0) (2019-05-08)
+
+
+### Bug Fixes
+
+* make cbor Decoder configurable ([#90](https://github.com/ipld/js-ipld-dag-cbor/issues/90)) ([dfb9137](https://github.com/ipld/js-ipld-dag-cbor/commit/dfb9137))
+* remove console.log statement ([a413cb2](https://github.com/ipld/js-ipld-dag-cbor/commit/a413cb2))
+* typo in travis badge ([94122f0](https://github.com/ipld/js-ipld-dag-cbor/commit/94122f0))
+* **package:** update cids to version 0.6.0 ([1d507f7](https://github.com/ipld/js-ipld-dag-cbor/commit/1d507f7))
+* **package:** update multihashing-async to version 0.6.0 ([b328072](https://github.com/ipld/js-ipld-dag-cbor/commit/b328072))
+
+
+### Features
+
+* allow decoder heap to grow dynamically ([1f7b7f1](https://github.com/ipld/js-ipld-dag-cbor/commit/1f7b7f1)), closes [#73](https://github.com/ipld/js-ipld-dag-cbor/issues/73)
+* new IPLD Format API ([cfc8519](https://github.com/ipld/js-ipld-dag-cbor/commit/cfc8519))
+
+
+### BREAKING CHANGES
+
+* The API is now async/await based
+
+There are numerous changes, the most significant one is that the API
+is no longer callback based, but it using async/await.
+
+For the full new API please see the [IPLD Formats spec].
+
+[IPLD Formats spec]: https://github.com/ipld/interface-ipld-format
+
+
+
 <a name="0.13.1"></a>
 ## [0.13.1](https://github.com/ipld/js-ipld-dag-cbor/compare/v0.13.0...v0.13.1) (2019-01-08)
 
