@@ -102,9 +102,9 @@ describe('util', () => {
 
   it('fuzz serialize and deserialize with garbage', () => {
     for (let ii = 0; ii < 1000; ii++) {
-      let original = { in: garbage(100) }
-      let encoded = dagCBOR.util.serialize(original)
-      let decoded = dagCBOR.util.deserialize(encoded)
+      const original = { in: garbage(100) }
+      const encoded = dagCBOR.util.serialize(original)
+      const decoded = dagCBOR.util.deserialize(encoded)
       expect(decoded).to.eql(original)
     }
   })

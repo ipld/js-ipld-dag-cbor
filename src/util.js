@@ -112,7 +112,7 @@ exports.configureDecoder = (options) => {
     maxSize = defaultMaxSize
   }
 
-  let decoderOptions = {
+  const decoderOptions = {
     tags: tags,
     size: currentSize
   }
