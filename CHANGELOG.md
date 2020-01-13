@@ -1,3 +1,14 @@
+<a name="0.15.1"></a>
+## [0.15.1](https://github.com/ipld/js-ipld-dag-cbor/compare/v0.15.0...v0.15.1) (2020-01-13)
+
+
+### Bug Fixes
+
+* **package:** update multicodec to version 1.0.0 ([d1d78a0](https://github.com/ipld/js-ipld-dag-cbor/commit/d1d78a0))
+* **package:** update multihashing-async to version 0.8.0 ([b8d4a55](https://github.com/ipld/js-ipld-dag-cbor/commit/b8d4a55))
+
+
+
 <a name="0.15.0"></a>
 # [0.15.0](https://github.com/ipld/js-ipld-dag-cbor/compare/v0.14.0...v0.15.0) (2019-05-10)
 
