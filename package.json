@@ -1,6 +1,6 @@
 {
   "name": "ipld-dag-cbor",
-  "version": "0.15.0",
+  "version": "0.15.1",
   "description": "JavaScript implementation of the IPLD (InterpPlanetary Linked Data)",
   "leadMaintainer": "Volker Mische <volker.mische@gmail.com>",
   "main": "src/index.js",
@@ -67,6 +67,7 @@
     "Rod Vagg <rod@vagg.org>",
     "Volker Mische <volker.mische@gmail.com>",
     "Yusef Napora <yusef@napora.org>",
+    "greenkeeper[bot] <23040076+greenkeeper[bot]@users.noreply.github.com>",
     "greenkeeper[bot] <greenkeeper[bot]@users.noreply.github.com>",
     "naure <naure@users.noreply.github.com>",
     "npmcdn-to-unpkg-bot <npmcdn-to-unpkg-bot@users.noreply.github.com>",
