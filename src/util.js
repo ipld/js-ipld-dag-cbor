@@ -134,6 +134,10 @@ exports.serialize = (node) => {
   const nodeTagged = replaceCIDbyTAG(node)
   const serialized = cbor.encode(nodeTagged)
 
+  if (serialized.length > maxSize) {
+    throw new Error('Data is too large to serialize with current decoder configuration')
+  }
+
   return serialized
 }
 

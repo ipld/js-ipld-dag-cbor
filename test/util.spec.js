@@ -57,14 +57,27 @@ describe('util', () => {
     const dataSize = (128 * 1024) + 1
     const largeObj = { someKey: [].slice.call(new Uint8Array(dataSize)) }
 
-    dagCBOR.util.configureDecoder({ size: 64 * 1024, maxSize: 128 * 1024 }) // 64 Kb start, 128 Kb max
+    dagCBOR.util.configureDecoder({ size: 64 * 1024, maxSize: dataSize + 100 }) // 64 Kb start, max of dataSize + 100 to make sure we can encode
     const serialized = dagCBOR.util.serialize(largeObj)
     expect(Buffer.isBuffer(serialized)).to.be.true()
 
+    // Reconfigure the decoder to a size smaller than the serialized data so we can verify it fails
+    dagCBOR.util.configureDecoder({ size: 64 * 1024, maxSize: 128 * 1024 }) // 64 Kb start, 128 Kb max
     expect(() => dagCBOR.util.deserialize(serialized)).to.throw(
       'Data is too large to deserialize with current decoder')
     // reset decoder to default
     dagCBOR.util.configureDecoder()
+  })
+
+  it('.serialize fail on large objects beyond maxSize', () => {
+    // larger than the default borc heap size, should bust the heap if we turn off auto-grow
+    const dataSize = (128 * 1024) + 1
+    const largeObj = { someKey: [].slice.call(new Uint8Array(dataSize)) }
+
+    dagCBOR.util.configureDecoder({ size: 64 * 1024, maxSize: 128 * 1024 }) // 64 Kb start, 128 Kb max
+    expect(() => dagCBOR.util.serialize(largeObj)).to.throw(
+      'Data is too large to serialize with current decoder configuration'
+    )
   })
 
   it('.serialize and .deserialize object with slash as property', () => {
