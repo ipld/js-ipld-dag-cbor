@@ -1,6 +1,7 @@
 'use strict'
 
 const cbor = require('borc')
+const { Buffer } = require('buffer')
 const multicodec = require('multicodec')
 const multihashing = require('multihashing-async')
 const CID = require('cids')
