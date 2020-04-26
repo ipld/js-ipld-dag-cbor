@@ -114,7 +114,7 @@ exports.configureDecoder = (options) => {
   }
 
   const decoderOptions = {
-    tags: tags,
+    tags,
     size: currentSize
   }
 
