@@ -109,4 +109,17 @@ describe('util', () => {
       expect(decoded).to.eql(original)
     }
   })
+
+  it('.serialize and .deserialize object with Uint8Array field', () => {
+    const buffer = Buffer.from('some data')
+    const bytes = Uint8Array.from(buffer)
+
+    const s1 = dagCBOR.util.serialize({ data: buffer })
+    const s2 = dagCBOR.util.serialize({ data: bytes })
+
+    expect(s1).to.be.eql(s2)
+
+    expect(dagCBOR.util.deserialize(s1)).to.be.eql({ data: bytes })
+    expect(dagCBOR.util.deserialize(s2)).to.be.eql({ data: bytes })
+  })
 })

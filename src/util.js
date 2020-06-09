@@ -35,7 +35,7 @@ function replaceCIDbyTAG (dagNode) {
   }
 
   function transform (obj) {
-    if (!obj || Buffer.isBuffer(obj) || typeof obj === 'string') {
+    if (!obj || obj instanceof Uint8Array || typeof obj === 'string') {
       return obj
     }
 
