@@ -1,3 +1,13 @@
+<a name="0.15.3"></a>
+## [0.15.3](https://github.com/ipld/js-ipld-dag-cbor/compare/v0.15.2...v0.15.3) (2020-06-10)
+
+
+### Features
+
+* serialize Uint8Array as binary (like Buffer) ([95f6bda](https://github.com/ipld/js-ipld-dag-cbor/commit/95f6bda))
+
+
+
 <a name="0.15.2"></a>
 ## [0.15.2](https://github.com/ipld/js-ipld-dag-cbor/compare/v0.15.1...v0.15.2) (2020-03-27)
 
