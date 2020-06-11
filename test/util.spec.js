@@ -122,4 +122,12 @@ describe('util', () => {
     expect(dagCBOR.util.deserialize(s1)).to.be.eql({ data: bytes })
     expect(dagCBOR.util.deserialize(s2)).to.be.eql({ data: bytes })
   })
+
+  it('reject extraneous, but valid CBOR data after initial top-level object', () => {
+    expect(() =>
+      // two top-level CBOR objects, the original and a single uint=0, valid if using
+      // CBOR in streaming mode, not valid here
+      dagCBOR.util.deserialize(Buffer.concat([serializedObj, Buffer.alloc(1)]))
+    ).to.throw(Error, 'Extraneous CBOR data found beyond initial top-level object')
+  })
 })
