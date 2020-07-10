@@ -1,3 +1,13 @@
+<a name="0.16.0"></a>
+# [0.16.0](https://github.com/ipld/js-ipld-dag-cbor/compare/v0.15.3...v0.16.0) (2020-07-10)
+
+
+### Bug Fixes
+
+* reject CBOR data with extraneous back-to-back encoded data ([8176c13](https://github.com/ipld/js-ipld-dag-cbor/commit/8176c13)), closes [/github.com/dignifiedquire/borc/issues/47#issuecomment-642432759](https://github.com//github.com/dignifiedquire/borc/issues/47/issues/issuecomment-642432759)
+
+
+
 <a name="0.15.3"></a>
 ## [0.15.3](https://github.com/ipld/js-ipld-dag-cbor/compare/v0.15.2...v0.15.3) (2020-06-10)
 
