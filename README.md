@@ -20,15 +20,22 @@
 
 ## Table of Contents
 
-- [Install](#install)
-  - [npm](#npm)
-  - [Use in Node.js](#use-in-nodejs)
-  - [Use in a browser with browserify, webpack or any other bundler](#use-in-a-browser-with-browserify-webpack-or-any-other-bundler)
-  - [Use in a browser Using a script tag](#use-in-a-browser-using-a-script-tag)
-- [Usage](#usage)
-- [API](#api)
-- [Contribute](#contribute)
-- [License](#license)
+- [js-ipld-dag-cbor](#js-ipld-dag-cbor)
+  - [Lead Maintainer](#lead-maintainer)
+  - [Table of Contents](#table-of-contents)
+  - [Install](#install)
+    - [npm](#npm)
+    - [Use in Node.js](#use-in-nodejs)
+    - [Use in a browser with browserify, webpack or any other bundler](#use-in-a-browser-with-browserify-webpack-or-any-other-bundler)
+    - [Use in a browser Using a script tag](#use-in-a-browser-using-a-script-tag)
+  - [Usage](#usage)
+  - [API](#api)
+    - [`dagCBOR.util.serialize(obj)`](#dagcborutilserializeobj)
+    - [`dagCBOR.util.deserialize(serialized)`](#dagcborutildeserializeserialized)
+    - [`dagCBOR.util.configureDecoder([options])`](#dagcborutilconfiguredecoderoptions)
+    - [`dagCBOR.util.cid(obj[, options,])`](#dagcborutilcidobj-options)
+  - [Contribute](#contribute)
+  - [License](#license)
 
 ## Install
 
@@ -73,13 +80,13 @@ const file = {
 }
 
 const serialized = dagCBOR.util.serialize(file)
-console.log(`Encoded as a ${serialized.length} byte Buffer`)
+console.log(`Encoded as a ${serialized.length} byte Uint8Array`)
 
 const node = dagCBOR.util.deserialize(serialized)
 console.log('Decoded as:', node)
 require('assert').deepEqual(node, file) // should match
 
-// → Encoded as a 22 byte Buffer
+// → Encoded as a 22 byte Uint8Array
 // → Decoded as: { name: 'hello.txt', size: 11 }
 ```
 
@@ -97,7 +104,7 @@ Returns the serialized node.
 
  Decodes an IPLD CBOR encoded representation, restoring any CBOR tags (id `42`) to CIDs.
 
-  - `serialized` (`Buffer` or `String`): a binary blob representing an IPLD CBOR encoded object.
+  - `serialized` (`Uint8Array` or `String`): a binary blob representing an IPLD CBOR encoded object.
 
 Returns the deserialized object.
 
