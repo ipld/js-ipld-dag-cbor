@@ -1,15 +1,13 @@
 /* eslint-env mocha */
 'use strict'
 
-const { Buffer } = require('buffer')
-const chai = require('chai')
-const dirtyChai = require('dirty-chai')
-const expect = chai.expect
-chai.use(dirtyChai)
+const { expect } = require('aegir/utils/chai')
 const garbage = require('garbage')
 const dagCBOR = require('../src')
 const multihash = require('multihashes')
 const CID = require('cids')
+const uint8ArrayFromString = require('uint8arrays/from-string')
+const uint8ArrayConcat = require('uint8arrays/concat')
 
 describe('util', () => {
   const obj = {
@@ -27,7 +25,7 @@ describe('util', () => {
   const serializedObj = dagCBOR.util.serialize(obj)
 
   it('.serialize and .deserialize', () => {
-    expect(Buffer.isBuffer(serializedObj)).to.equal(true)
+    expect(serializedObj).to.be.a('Uint8Array')
 
     // Check for the tag 42
     // d8 = tag, 2a = 42
@@ -45,7 +43,7 @@ describe('util', () => {
     const largeObj = { someKey: [].slice.call(new Uint8Array(dataSize)) }
 
     const serialized = dagCBOR.util.serialize(largeObj)
-    expect(Buffer.isBuffer(serialized)).to.be.true()
+    expect(serialized).to.be.a('Uint8Array')
 
     const deserialized = dagCBOR.util.deserialize(serialized)
     expect(largeObj).to.eql(deserialized)
@@ -60,7 +58,7 @@ describe('util', () => {
 
     dagCBOR.util.configureDecoder({ size: 64 * 1024, maxSize: 128 * 1024 }) // 64 Kb start, 128 Kb max
     const serialized = dagCBOR.util.serialize(largeObj)
-    expect(Buffer.isBuffer(serialized)).to.be.true()
+    expect(serialized).to.be.a('Uint8Array')
 
     expect(() => dagCBOR.util.deserialize(serialized)).to.throw(
       'Data is too large to deserialize with current decoder')
@@ -111,7 +109,7 @@ describe('util', () => {
   })
 
   it('.serialize and .deserialize object with Uint8Array field', () => {
-    const buffer = Buffer.from('some data')
+    const buffer = uint8ArrayFromString('some data')
     const bytes = Uint8Array.from(buffer)
 
     const s1 = dagCBOR.util.serialize({ data: buffer })
@@ -127,7 +125,7 @@ describe('util', () => {
     expect(() =>
       // two top-level CBOR objects, the original and a single uint=0, valid if using
       // CBOR in streaming mode, not valid here
-      dagCBOR.util.deserialize(Buffer.concat([serializedObj, Buffer.alloc(1)]))
+      dagCBOR.util.deserialize(uint8ArrayConcat([serializedObj, new Uint8Array(1)]))
     ).to.throw(Error, 'Extraneous CBOR data found beyond initial top-level object')
   })
 })

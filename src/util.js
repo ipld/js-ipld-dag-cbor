@@ -1,26 +1,27 @@
 'use strict'
 
 const cbor = require('borc')
-const { Buffer } = require('buffer')
 const multicodec = require('multicodec')
 const multihashing = require('multihashing-async')
 const CID = require('cids')
 const isCircular = require('is-circular')
+const uint8ArrayConcat = require('uint8arrays/concat')
+const uint8ArrayFromString = require('uint8arrays/from-string')
 
 // https://github.com/ipfs/go-ipfs/issues/3570#issuecomment-273931692
 const CID_CBOR_TAG = 42
 
 function tagCID (cid) {
   if (typeof cid === 'string') {
-    cid = new CID(cid).buffer
+    cid = new CID(cid).bytes
   } else if (CID.isCID(cid)) {
-    cid = cid.buffer
+    cid = cid.bytes
   }
 
-  return new cbor.Tagged(CID_CBOR_TAG, Buffer.concat([
-    Buffer.from('00', 'hex'), // thanks jdag
+  return new cbor.Tagged(CID_CBOR_TAG, uint8ArrayConcat([
+    uint8ArrayFromString('00', 'base16'), // thanks jdag
     cid
-  ]))
+  ], 1 + cid.length))
 }
 
 function replaceCIDbyTAG (dagNode) {
@@ -129,7 +130,7 @@ exports.configureDecoder() // Setup default cbor.Decoder
  * Serialize internal representation into a binary CBOR block.
  *
  * @param {Object} node - Internal representation of a CBOR block
- * @returns {Buffer} - The encoded binary representation
+ * @returns {Uint8Array} - The encoded binary representation
  */
 exports.serialize = (node) => {
   const nodeTagged = replaceCIDbyTAG(node)
@@ -141,7 +142,7 @@ exports.serialize = (node) => {
 /**
  * Deserialize CBOR block into the internal representation.
  *
- * @param {Buffer} data - Binary representation of a CBOR block
+ * @param {Uint8Array} data - Binary representation of a CBOR block
  * @returns {Object} - An object that conforms to the IPLD Data Model
  */
 exports.deserialize = (data) => {
