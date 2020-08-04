@@ -2,13 +2,8 @@
 /* eslint max-nested-callbacks: ["error", 5] */
 'use strict'
 
-const chai = require('chai')
-const dirtyChai = require('dirty-chai')
-const expect = chai.expect
-chai.use(dirtyChai)
-
+const { expect } = require('aegir/utils/chai')
 const CID = require('cids')
-
 const dagCBOR = require('../src')
 const resolver = dagCBOR.resolver
 
