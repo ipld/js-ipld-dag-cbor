@@ -1,4 +1,4 @@
-# js-ipld-dag-cbor
+# js-ipld-dag-cbor <!-- omit in toc -->
 
 [![](https://img.shields.io/badge/made%20by-Protocol%20Labs-blue.svg?style=flat-square)](http://ipn.io)
 [![](https://img.shields.io/badge/project-IPLD-blue.svg?style=flat-square)](http://github.com/ipld/ipld)
@@ -14,28 +14,25 @@
 
 > JavaScript implementation of the [IPLD spec](https://github.com/ipfs/specs/tree/master/ipld).
 
-## Lead Maintainer
+## Lead Maintainer <!-- omit in toc -->
 
 [Volker Mische](https://github.com/vmx)
 
-## Table of Contents
+## Table of Contents <!-- omit in toc -->
 
-- [js-ipld-dag-cbor](#js-ipld-dag-cbor)
-  - [Lead Maintainer](#lead-maintainer)
-  - [Table of Contents](#table-of-contents)
-  - [Install](#install)
-    - [npm](#npm)
-    - [Use in Node.js](#use-in-nodejs)
-    - [Use in a browser with browserify, webpack or any other bundler](#use-in-a-browser-with-browserify-webpack-or-any-other-bundler)
-    - [Use in a browser Using a script tag](#use-in-a-browser-using-a-script-tag)
-  - [Usage](#usage)
-  - [API](#api)
-    - [`dagCBOR.util.serialize(obj)`](#dagcborutilserializeobj)
-    - [`dagCBOR.util.deserialize(serialized)`](#dagcborutildeserializeserialized)
-    - [`dagCBOR.util.configureDecoder([options])`](#dagcborutilconfiguredecoderoptions)
-    - [`dagCBOR.util.cid(obj[, options,])`](#dagcborutilcidobj-options)
-  - [Contribute](#contribute)
-  - [License](#license)
+- [Install](#install)
+  - [npm](#npm)
+  - [Use in Node.js](#use-in-nodejs)
+  - [Use in a browser with browserify, webpack or any other bundler](#use-in-a-browser-with-browserify-webpack-or-any-other-bundler)
+  - [Use in a browser Using a script tag](#use-in-a-browser-using-a-script-tag)
+- [Usage](#usage)
+- [API](#api)
+  - [`dagCBOR.util.serialize(obj)`](#dagcborutilserializeobj)
+  - [`dagCBOR.util.deserialize(serialized)`](#dagcborutildeserializeserialized)
+  - [`dagCBOR.util.configureDecoder([options])`](#dagcborutilconfiguredecoderoptions)
+  - [`dagCBOR.util.cid(obj[, options,])`](#dagcborutilcidobj-options)
+- [Contribute](#contribute)
+- [License](#license)
 
 ## Install
 
