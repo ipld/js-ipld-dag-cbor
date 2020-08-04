@@ -1,3 +1,18 @@
+<a name="0.17.0"></a>
+# [0.17.0](https://github.com/ipld/js-ipld-dag-cbor/compare/v0.16.0...v0.17.0) (2020-08-04)
+
+
+### Bug Fixes
+
+* replace node buffers with uint8arrays ([#134](https://github.com/ipld/js-ipld-dag-cbor/issues/134)) ([41587e7](https://github.com/ipld/js-ipld-dag-cbor/commit/41587e7))
+
+
+### BREAKING CHANGES
+
+* - `util.serialize` now returns a Uint8Array
+
+
+
 <a name="0.16.0"></a>
 # [0.16.0](https://github.com/ipld/js-ipld-dag-cbor/compare/v0.15.3...v0.16.0) (2020-07-10)
 
