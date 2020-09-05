@@ -49,7 +49,7 @@ function replaceCIDbyTAG (dagNode) {
     }
 
     const keys = Object.keys(obj)
-
+    
     if (keys.length > 0) {
       // Recursive transform
       const out = {}
@@ -134,6 +134,7 @@ exports.configureDecoder() // Setup default cbor.Decoder
  */
 exports.serialize = (node) => {
   const nodeTagged = replaceCIDbyTAG(node)
+  if(typeof node.encodeCBOR === 'function') nodeTagged.encodeCBOR = node.encodeCBOR
   const serialized = cbor.encode(nodeTagged)
 
   return serialized
