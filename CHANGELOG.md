@@ -1,3 +1,7 @@
+## [0.17.1](https://github.com/ipld/js-ipld-dag-cbor/compare/v0.17.0...v0.17.1) (2021-03-03)
+
+
+
 <a name="0.17.0"></a>
 # [0.17.0](https://github.com/ipld/js-ipld-dag-cbor/compare/v0.16.0...v0.17.0) (2020-08-04)
 
