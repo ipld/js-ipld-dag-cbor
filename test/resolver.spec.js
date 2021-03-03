@@ -83,7 +83,7 @@ describe('IPLD format resolver (local)', () => {
 
         const falsyNodeBlob = dagCBOR.util.serialize(falsyNode)
 
-        Object.keys(falsyNode).map((key) => {
+        Object.keys(falsyNode).forEach((key) => {
           const result = resolver.resolve(falsyNodeBlob, key)
           expect(result.value).to.equal(falsyNode[key])
         })

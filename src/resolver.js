@@ -11,11 +11,6 @@ const util = require('./util')
  *
  * @param {Uint8Array} binaryBlob - Binary representation of a CBOR block
  * @param {string} [path='/'] - Path that should be resolved
- * @returns {Object} result - Result of the path it it was resolved successfully
- * @returns {*} result.value - Value the path resolves to
- * @returns {string} result.remainderPath - If the path resolves half-way to a
- *   link, then the `remainderPath` is the part after the link that can be used
- *   for further resolving
  */
 exports.resolve = (binaryBlob, path) => {
   let node = util.deserialize(binaryBlob)
