@@ -69,10 +69,8 @@ function replaceCIDbyTAG (dagNode) {
   return transform(dagNode)
 }
 
-exports = module.exports
-
-exports.codec = multicodec.DAG_CBOR
-exports.defaultHashAlg = multicodec.SHA2_256
+const codec = multicodec.DAG_CBOR
+const defaultHashAlg = multicodec.SHA2_256
 
 const defaultTags = {
   [CID_CBOR_TAG]: (val) => {
@@ -95,7 +93,7 @@ let decoder = null
  * @param {number} [options.maxSize=67108864] - The maximum size the CBOR parsing heap is allowed to grow to before `dagCBOR.util.deserialize()` returns an error
  * @param {Object} [options.tags] - An object whose keys are CBOR tag numbers and values are transform functions that accept a `value` and return a decoded representation of that `value`
  */
-exports.configureDecoder = (options) => {
+function configureDecoder (options) {
   let tags = defaultTags
 
   if (options) {
@@ -124,7 +122,7 @@ exports.configureDecoder = (options) => {
   currentSize = decoderOptions.size
 }
 
-exports.configureDecoder() // Setup default cbor.Decoder
+configureDecoder() // Setup default cbor.Decoder
 
 /**
  * Serialize internal representation into a binary CBOR block.
@@ -132,7 +130,7 @@ exports.configureDecoder() // Setup default cbor.Decoder
  * @param {Object} node - Internal representation of a CBOR block
  * @returns {Uint8Array} - The encoded binary representation
  */
-exports.serialize = (node) => {
+function serialize (node) {
   const nodeTagged = replaceCIDbyTAG(node)
   const serialized = cbor.encode(nodeTagged)
 
@@ -145,9 +143,9 @@ exports.serialize = (node) => {
  * @param {Uint8Array} data - Binary representation of a CBOR block
  * @returns {Object} - An object that conforms to the IPLD Data Model
  */
-exports.deserialize = (data) => {
+function deserialize (data) {
   if (data.length > currentSize && data.length <= maxSize) {
-    exports.configureDecoder({ size: data.length })
+    configureDecoder({ size: data.length })
   }
 
   if (data.length > currentSize) {
@@ -170,16 +168,25 @@ exports.deserialize = (data) => {
  * @param {Object} binaryBlob - Encoded IPLD Node
  * @param {Object} [userOptions] - Options to create the CID
  * @param {number} [userOptions.cidVersion=1] - CID version number
- * @param {string} [UserOptions.hashAlg] - Defaults to the defaultHashAlg of the format
+ * @param {string} [userOptions.hashAlg] - Defaults to the defaultHashAlg of the format
  * @returns {Promise.<CID>}
  */
-exports.cid = async (binaryBlob, userOptions) => {
-  const defaultOptions = { cidVersion: 1, hashAlg: exports.defaultHashAlg }
+async function cid (binaryBlob, userOptions) {
+  const defaultOptions = { cidVersion: 1, hashAlg: defaultHashAlg }
   const options = Object.assign(defaultOptions, userOptions)
 
   const multihash = await multihashing(binaryBlob, options.hashAlg)
-  const codecName = multicodec.print[exports.codec]
+  const codecName = multicodec.getNameFromCode(codec)
   const cid = new CID(options.cidVersion, codecName, multihash)
 
   return cid
+}
+
+module.exports = {
+  codec,
+  defaultHashAlg,
+  configureDecoder,
+  serialize,
+  deserialize,
+  cid
 }

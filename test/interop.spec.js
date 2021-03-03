@@ -3,7 +3,7 @@
 
 const { expect } = require('aegir/utils/chai')
 const dagCBOR = require('../src')
-const loadFixture = require('aegir/fixtures')
+const loadFixture = require('aegir/utils/fixtures')
 const isNode = require('detect-node')
 
 const arrayLinkCBOR = loadFixture('test/fixtures/array-link.cbor')
