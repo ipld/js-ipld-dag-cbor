@@ -74,6 +74,7 @@ describe('IPLD format resolver (local)', () => {
       })
 
       it('should resolve falsy values for path within scope', () => {
+        /** @type {{ [key: string]: any }} */
         const falsyNode = {
           nu11: null,
           f4lse: false,

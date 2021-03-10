@@ -2,11 +2,13 @@
 'use strict'
 
 const { expect } = require('aegir/utils/chai')
+// @ts-ignore
 const garbage = require('garbage')
 const dagCBOR = require('../src')
 const multihash = require('multihashes')
 const CID = require('cids')
 const uint8ArrayFromString = require('uint8arrays/from-string')
+const uint8ArrayToString = require('uint8arrays/to-string')
 const uint8ArrayConcat = require('uint8arrays/concat')
 
 describe('util', () => {
@@ -30,7 +32,7 @@ describe('util', () => {
     // Check for the tag 42
     // d8 = tag, 2a = 42
     expect(
-      serializedObj.toString('hex').match(/d82a/g)
+      uint8ArrayToString(serializedObj, 'base16').match(/d82a/g)
     ).to.have.length(4)
 
     const deserializedObj = dagCBOR.util.deserialize(serializedObj)
@@ -90,7 +92,7 @@ describe('util', () => {
   })
 
   it('.cid with hashAlg', async () => {
-    const cid = await dagCBOR.util.cid(serializedObj, { hashAlg: 'sha2-512' })
+    const cid = await dagCBOR.util.cid(serializedObj, { hashAlg: multihash.names['sha2-512'] })
     expect(cid.version).to.equal(1)
     expect(cid.codec).to.equal('dag-cbor')
     expect(cid.multihash).to.exist()

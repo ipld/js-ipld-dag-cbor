@@ -12,13 +12,13 @@ const util = require('./util')
  * @param {Uint8Array} binaryBlob - Binary representation of a CBOR block
  * @param {string} [path='/'] - Path that should be resolved
  */
-exports.resolve = (binaryBlob, path) => {
+exports.resolve = (binaryBlob, path = '/') => {
   let node = util.deserialize(binaryBlob)
 
   const parts = path.split('/').filter(Boolean)
   while (parts.length) {
     const key = parts.shift()
-    if (node[key] === undefined) {
+    if (!key || !(key in node)) {
       throw new Error(`Object has no property '${key}'`)
     }
 
@@ -37,17 +37,25 @@ exports.resolve = (binaryBlob, path) => {
   }
 }
 
+/**
+ * @param {any} node
+ * @param {string} [path]
+ * @returns {Generator<string, void, undefined>}
+ */
 const traverse = function * (node, path) {
   // Traverse only objects and arrays
-  if (node instanceof Uint8Array || CID.isCID(node) || typeof node === 'string' ||
-      node === null) {
+  if (node instanceof Uint8Array || CID.isCID(node) || typeof node === 'string' || node === null) {
     return
   }
+
   for (const item of Object.keys(node)) {
     const nextpath = path === undefined ? item : path + '/' + item
     yield nextpath
     yield * traverse(node[item], nextpath)
   }
+
+  // to stop eslint and tsc fighting
+  return undefined
 }
 
 /**
