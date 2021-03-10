@@ -10,6 +10,9 @@ const CID = require('cids')
 const uint8ArrayFromString = require('uint8arrays/from-string')
 const uint8ArrayToString = require('uint8arrays/to-string')
 const uint8ArrayConcat = require('uint8arrays/concat')
+const {
+  configureDecoder
+} = require('../src/util')
 
 describe('util', () => {
   const obj = {
@@ -50,7 +53,7 @@ describe('util', () => {
     const deserialized = dagCBOR.util.deserialize(serialized)
     expect(largeObj).to.eql(deserialized)
     // reset decoder to default
-    dagCBOR.util.configureDecoder()
+    configureDecoder()
   })
 
   it('.deserialize fail on large objects beyond maxSize', () => {
@@ -58,14 +61,14 @@ describe('util', () => {
     const dataSize = (128 * 1024) + 1
     const largeObj = { someKey: [].slice.call(new Uint8Array(dataSize)) }
 
-    dagCBOR.util.configureDecoder({ size: 64 * 1024, maxSize: 128 * 1024 }) // 64 Kb start, 128 Kb max
+    configureDecoder({ size: 64 * 1024, maxSize: 128 * 1024 }) // 64 Kb start, 128 Kb max
     const serialized = dagCBOR.util.serialize(largeObj)
     expect(serialized).to.be.a('Uint8Array')
 
     expect(() => dagCBOR.util.deserialize(serialized)).to.throw(
       'Data is too large to deserialize with current decoder')
     // reset decoder to default
-    dagCBOR.util.configureDecoder()
+    configureDecoder()
   })
 
   it('.serialize and .deserialize object with slash as property', () => {
