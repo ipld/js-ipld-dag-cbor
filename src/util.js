@@ -1,29 +1,47 @@
 'use strict'
 
+// @ts-ignore TODO: switch to cborg
 const cbor = require('borc')
 const multicodec = require('multicodec')
 const multihashing = require('multihashing-async')
+const { multihash } = multihashing
 const CID = require('cids')
+// @ts-ignore
 const isCircular = require('is-circular')
 const uint8ArrayConcat = require('uint8arrays/concat')
 const uint8ArrayFromString = require('uint8arrays/from-string')
 
+/**
+ * @typedef {import('cids').CIDVersion} CIDVersion
+ * @typedef {import('multihashing-async').multihash.HashCode} HashCode
+ */
+
 // https://github.com/ipfs/go-ipfs/issues/3570#issuecomment-273931692
 const CID_CBOR_TAG = 42
 
+/**
+ * @param {CID | string} cid
+ */
 function tagCID (cid) {
+  let buf
+
   if (typeof cid === 'string') {
-    cid = new CID(cid).bytes
+    buf = new CID(cid).bytes
   } else if (CID.isCID(cid)) {
-    cid = cid.bytes
+    buf = cid.bytes
+  } else {
+    throw new Error('Could not tag CID - was not string or CID')
   }
 
   return new cbor.Tagged(CID_CBOR_TAG, uint8ArrayConcat([
     uint8ArrayFromString('00', 'base16'), // thanks jdag
-    cid
-  ], 1 + cid.length))
+    buf
+  ], 1 + buf.length))
 }
 
+/**
+ * @param {any} dagNode
+ */
 function replaceCIDbyTAG (dagNode) {
   let circular
   try {
@@ -35,6 +53,10 @@ function replaceCIDbyTAG (dagNode) {
     throw new Error('The object passed has circular references')
   }
 
+  /**
+   * @param {any} obj
+   * @returns {any}
+   */
   function transform (obj) {
     if (!obj || obj instanceof Uint8Array || typeof obj === 'string') {
       return obj
@@ -52,6 +74,7 @@ function replaceCIDbyTAG (dagNode) {
 
     if (keys.length > 0) {
       // Recursive transform
+      /** @type {Record<string, any>} */
       const out = {}
       keys.forEach((key) => {
         if (typeof obj[key] === 'object') {
@@ -70,9 +93,12 @@ function replaceCIDbyTAG (dagNode) {
 }
 
 const codec = multicodec.DAG_CBOR
-const defaultHashAlg = multicodec.SHA2_256
+const defaultHashAlg = multihash.names['sha2-256']
 
 const defaultTags = {
+  /**
+   * @param {Uint8Array} val
+   */
   [CID_CBOR_TAG]: (val) => {
     // remove that 0
     val = val.slice(1)
@@ -83,7 +109,8 @@ const defaultSize = 64 * 1024 // current decoder heap size, 64 Kb
 let currentSize = defaultSize
 const defaultMaxSize = 64 * 1024 * 1024 // max heap size when auto-growing, 64 Mb
 let maxSize = defaultMaxSize
-let decoder = null
+/** @type {cbor.Decoder} */
+let decoder
 
 /**
  * Configure the underlying CBOR decoder.
@@ -141,7 +168,7 @@ function serialize (node) {
  * Deserialize CBOR block into the internal representation.
  *
  * @param {Uint8Array} data - Binary representation of a CBOR block
- * @returns {Object} - An object that conforms to the IPLD Data Model
+ * @returns {any} - An object that conforms to the IPLD Data Model
  */
 function deserialize (data) {
   if (data.length > currentSize && data.length <= maxSize) {
@@ -165,19 +192,21 @@ function deserialize (data) {
 /**
  * Calculate the CID of the binary blob.
  *
- * @param {Object} binaryBlob - Encoded IPLD Node
+ * @param {Uint8Array} binaryBlob - Encoded IPLD Node
  * @param {Object} [userOptions] - Options to create the CID
- * @param {number} [userOptions.cidVersion=1] - CID version number
- * @param {string} [userOptions.hashAlg] - Defaults to the defaultHashAlg of the format
- * @returns {Promise.<CID>}
+ * @param {CIDVersion} [userOptions.cidVersion=1] - CID version number
+ * @param {HashCode} [userOptions.hashAlg=multihash.names['sha2-256']] - Defaults to the defaultHashAlg of the format
  */
-async function cid (binaryBlob, userOptions) {
-  const defaultOptions = { cidVersion: 1, hashAlg: defaultHashAlg }
-  const options = Object.assign(defaultOptions, userOptions)
+async function cid (binaryBlob, userOptions = {}) {
+  const options = {
+    cidVersion: userOptions.cidVersion == null ? 1 : userOptions.cidVersion,
+    hashAlg: userOptions.hashAlg == null ? module.exports.defaultHashAlg : userOptions.hashAlg
+  }
 
-  const multihash = await multihashing(binaryBlob, options.hashAlg)
-  const codecName = multicodec.getNameFromCode(codec)
-  const cid = new CID(options.cidVersion, codecName, multihash)
+  const hashName = multihash.codes[options.hashAlg]
+  const hash = await multihashing(binaryBlob, hashName)
+  const codecName = multicodec.getNameFromCode(module.exports.codec)
+  const cid = new CID(options.cidVersion, codecName, hash)
 
   return cid
 }
