@@ -168,7 +168,7 @@ function serialize (node) {
  * Deserialize CBOR block into the internal representation.
  *
  * @param {Uint8Array} data - Binary representation of a CBOR block
- * @returns {{ [key: string]: any }} - An object that conforms to the IPLD Data Model
+ * @returns {any} - An object that conforms to the IPLD Data Model
  */
 function deserialize (data) {
   if (data.length > currentSize && data.length <= maxSize) {

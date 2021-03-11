@@ -12,7 +12,7 @@ const util = require('./util')
  * @param {Uint8Array} binaryBlob - Binary representation of a CBOR block
  * @param {string} [path='/'] - Path that should be resolved
  */
-exports.resolve = (binaryBlob, path = '/') => {
+exports.resolve = (binaryBlob, path = '') => {
   let node = util.deserialize(binaryBlob)
 
   const parts = path.split('/').filter(Boolean)
