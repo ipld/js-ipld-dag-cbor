@@ -1,3 +1,17 @@
+# [1.0.0](https://github.com/ipld/js-ipld-dag-cbor/compare/v0.18.0...v1.0.0) (2021-04-27)
+
+
+### chore
+
+* update deps ([#140](https://github.com/ipld/js-ipld-dag-cbor/issues/140)) ([5d13035](https://github.com/ipld/js-ipld-dag-cbor/commit/5d13035533a00fba12d4a0e9544347cce51e1350))
+
+
+### BREAKING CHANGES
+
+* `buffer@6.x.x` has dropped support for IE and Safari < 10
+
+
+
 # [0.18.0](https://github.com/ipld/js-ipld-dag-cbor/compare/v0.17.1...v0.18.0) (2021-03-11)
 
 
