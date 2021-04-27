@@ -1,6 +1,6 @@
 {
   "name": "ipld-dag-cbor",
-  "version": "0.18.0",
+  "version": "1.0.0",
   "description": "JavaScript implementation of the IPLD (InterpPlanetary Linked Data)",
   "leadMaintainer": "Volker Mische <volker.mische@gmail.com>",
   "main": "src/index.js",
@@ -57,19 +57,19 @@
     "Volker Mische <volker.mische@gmail.com>",
     "dignifiedquire <dignifiedquire@gmail.com>",
     "Richard Schneider <makaretu@gmail.com>",
-    "wanderer <mjbecze@gmail.com>",
     "Alex Potsides <alex@achingbrain.net>",
+    "wanderer <mjbecze@gmail.com>",
     "Rod Vagg <rod@vagg.org>",
     "Linus Unnebäck <linus@folkdatorn.se>",
     "Richard Littauer <richard.littauer@gmail.com>",
-    "Alan Shaw <alan.shaw@protocol.ai>",
+    "Alan Shaw <alan@tableflip.io>",
     "Hugo Dias <hugomrdias@gmail.com>",
+    "ᴠɪᴄᴛᴏʀ ʙᴊᴇʟᴋʜᴏʟᴍ <victorbjelkholm@gmail.com>",
     "Brandon Westcott <brandonwestcott@gmail.com>",
     "Irakli Gozalishvili <contact@gozala.io>",
     "Joel Gustafson <joelg@mit.edu>",
     "Jonah Weissman <jonahrweissman@gmail.com>",
     "Mikeal Rogers <mikeal.rogers@gmail.com>",
-    "Yusef Napora <yusef@napora.org>",
-    "ᴠɪᴄᴛᴏʀ ʙᴊᴇʟᴋʜᴏʟᴍ <victorbjelkholm@gmail.com>"
+    "Yusef Napora <yusef@napora.org>"
   ]
 }
