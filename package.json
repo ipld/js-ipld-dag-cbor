@@ -37,7 +37,7 @@
   },
   "homepage": "https://github.com/ipld/js-ipld-dag-cbor",
   "dependencies": {
-    "borc": "^2.1.2",
+    "borc": "^3.0.0",
     "cids": "^1.0.0",
     "interface-ipld-format": "^1.0.0",
     "is-circular": "^1.0.2",
@@ -47,7 +47,7 @@
   },
   "devDependencies": {
     "@types/detect-node": "^2.0.0",
-    "aegir": "^31.0.1",
+    "aegir": "^33.1.1",
     "detect-node": "^2.0.4",
     "garbage": "0.0.0",
     "multihashes": "^4.0.1"
